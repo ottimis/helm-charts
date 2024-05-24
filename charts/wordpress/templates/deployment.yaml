@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "wordpress.fullname" . }}
+  name: {{ include "wordpress.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ include "wordpress.name" . }}
@@ -47,6 +47,6 @@ spec:
       volumes:
         - name: wordpress-data
           persistentVolumeClaim:
-            claimName: {{ include "wordpress.fullname" . }}
+            claimName: {{ include "wordpress.name" . }}
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}
