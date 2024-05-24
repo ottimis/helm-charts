@@ -31,3 +31,5 @@ database:
   port: ""
   user: ""
   existingSecret: ""
+
+nameOverride: ""
