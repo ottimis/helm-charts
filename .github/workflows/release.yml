@@ -23,6 +23,9 @@ jobs:
             helm package $chart -d packages
           done
 
+      - name: Add CNAME file
+        run: echo "charts.otm.ai" > packages/CNAME
+
       - name: Update Helm repo index
         run: |
           helm repo index packages --url https://charts.otm.ai
