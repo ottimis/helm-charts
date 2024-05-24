@@ -25,7 +25,7 @@ jobs:
 
       - name: Update Helm repo index
         run: |
-          helm repo index packages --url https://helm.otm.ai/helm-charts/packages
+          helm repo index packages --url https://charts.otm.ai/helm-charts/packages
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
