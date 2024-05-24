@@ -1,0 +1,33 @@
+replicaCount: 1
+storageClass: ""
+updateStrategy: "RollingUpdate"
+nodeSelector: {}
+
+image:
+  repository: wordpress
+  pullPolicy: IfNotPresent
+  tag: "6.5.3"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  certificateArn: ""
+  annotations: {}
+  hosts: []
+
+persistence:
+  accessModes:
+    - ReadWriteMany
+  enabled: true
+  size: 8Gi
+
+database:
+  host: ""
+  name: ""
+  port: ""
+  user: ""
+  existingSecret: ""

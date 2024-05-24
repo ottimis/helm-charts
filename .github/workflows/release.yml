@@ -1,0 +1,34 @@
+name: Release Helm Chart
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+
+      - name: Package Helm Charts
+        run: |
+          mkdir -p packages
+          for chart in $(ls -d charts/*/); do
+            helm package $chart -d packages
+          done
+
+      - name: Update Helm repo index
+        run: |
+          helm repo index packages --url https://helm.otm.ai/helm-charts/packages
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages
