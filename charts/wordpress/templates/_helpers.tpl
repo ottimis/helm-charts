@@ -1,3 +1,3 @@
 {{- define "wordpress.name" -}}
-{{- default .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- default .Chart.Name .Release.Name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
