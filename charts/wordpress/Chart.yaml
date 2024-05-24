@@ -1,8 +1,16 @@
 apiVersion: v2
 name: wordpress
 description: A Helm chart for wordpress in Kubernetes
-
 type: application
-version: 0.0.1
-
+version: 0.0.2
 appVersion: "6.5.3"
+home: https://ottimis.com
+maintainers:
+  - name: MM
+    email: mm@ottimis.com
+annotations:
+  category: "Content Management"
+  tags: "wordpress, cms, blog"
+  artifacthub.io/images: |
+    - "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png"
+icon: https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png
