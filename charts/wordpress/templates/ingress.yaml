@@ -29,7 +29,7 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: {{ include "wordpress.fullname" $. }}
+                name: {{ include "wordpress.fullname" . }}
                 port:
                   number: 80
           {{- end }}
