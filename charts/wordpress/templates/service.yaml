@@ -10,7 +10,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 80
+      targetPort: 8080
   selector:
     app.kubernetes.io/name: {{ include "wordpress.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

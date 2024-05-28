@@ -20,13 +20,26 @@ spec:
         app.kubernetes.io/name: {{ include "wordpress.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{-if .Values.preventRoot }}
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+      {{- end }}
       containers:
         - name: wordpress
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
+          {{- if .Values.preventRoot }}
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          {{- end }}
           env:
             - name: WORDPRESS_DB_HOST
               value: {{ .Values.database.host }}

@@ -2,6 +2,7 @@ replicaCount: 1
 storageClass: ""
 updateStrategy: "RollingUpdate"
 nodeSelector: {}
+preventRoot: true
 
 image:
   repository: ottimis/wordpress
