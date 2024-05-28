@@ -1,0 +1,26 @@
+{{- if and .Values.wordpress.cacheHost .Values.wordpress.cachePort }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "wordpress.name" . }}-postinit
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  {{- $memcachedFullname := .Values.wordpress.cacheHost }}
+  {{- $memcachedPort := .Values.wordpress.cachePort | int }}
+  00-configure-w3-total-cache.sh: |-
+    #!/bin/bash
+
+    # Activate W3 Total Cache pairs
+    wp plugin activate w3-total-cache
+    wp total-cache fix_environment
+
+    # Choose 'Memcached' as database and object cache method
+    wp total-cache option set dbcache.engine memcached --type=string
+    wp total-cache option set objectcache.engine memcached --type=string
+    wp total-cache flush all
+    wp total-cache option set dbcache.memcached.servers {{ $memcachedFullname }}:{{ $memcachedPort }} --type=string
+    wp total-cache option set dbcache.enabled true --type=boolean
+    wp total-cache option set objectcache.memcached.servers {{ $memcachedFullname }}:{{ $memcachedPort }} --type=string
+    wp total-cache option set objectcache.enabled true --type=boolean
+    wp total-cache flush all
+{{- end }}

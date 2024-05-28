@@ -36,3 +36,5 @@ nameOverride: ""
 
 wordpress:
   memoryLimit: 768M
+  cacheHost: ""
+  cachePort: ""

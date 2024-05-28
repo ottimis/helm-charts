@@ -49,9 +49,19 @@ spec:
           volumeMounts:
             - name: wordpress-data
               mountPath: /var/www/html
+            {{- if and .Values.wordpress.cacheHost .Values.wordpress.cachePort }}
+            - mountPath: /docker-entrypoint-init.d
+              name: custom-postinit
+            {{- end }}
       volumes:
         - name: wordpress-data
           persistentVolumeClaim:
             claimName: {{ include "wordpress.name" . }}
+        {{- if and .Values.wordpress.cacheHost .Values.wordpress.cachePort }}
+        - name: custom-postinit
+          configMap:
+            name: {{ include "wordpress.name" . }}-postinit
+            defaultMode: 0755
+        {{- end }}
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}
