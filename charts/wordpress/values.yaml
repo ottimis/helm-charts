@@ -35,4 +35,4 @@ database:
 nameOverride: ""
 
 wordpress:
-  memoryLimit: 768MB
+  memoryLimit: 768M
