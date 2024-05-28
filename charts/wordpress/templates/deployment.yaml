@@ -41,6 +41,11 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.database.existingSecret }}
                   key: password
+            - name: WORDPRESS_CONFIG_EXTRA
+              value: |
+                {{- if .Values.wordpress.memoryLimit }}
+                define('WP_MEMORY_LIMIT', '{{ .Values.wordpress.memoryLimit }}');
+                {{- end }}
           volumeMounts:
             - name: wordpress-data
               mountPath: /var/www/html

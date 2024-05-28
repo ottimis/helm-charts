@@ -4,7 +4,7 @@ updateStrategy: "RollingUpdate"
 nodeSelector: {}
 
 image:
-  repository: wordpress
+  repository: ottimis/wordpress
   pullPolicy: IfNotPresent
   tag: "6.5.3"
 
@@ -33,3 +33,6 @@ database:
   existingSecret: ""
 
 nameOverride: ""
+
+wordpress:
+  memoryLimit: 768MB
