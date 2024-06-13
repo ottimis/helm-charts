@@ -10,8 +10,10 @@ data:
   00-configure-w3-total-cache.sh: |-
     #!/bin/bash
 
-    # Activate W3 Total Cache pairs
-    wp plugin activate w3-total-cache
+    # Install W3 Total Cache and activate it
+    wp plugin install w3-total-cache --activate
+
+    # Set the environment to 'Production'
     wp total-cache fix_environment
 
     # Choose 'Memcached' as database and object cache method
