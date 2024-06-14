@@ -42,3 +42,4 @@ wordpress:
   title: "My Blog"
   adminUser: "admin"
   adminEmail: "wp@ottimis.com"
+  locale: 'it_IT'

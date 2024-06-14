@@ -61,6 +61,8 @@ spec:
                 {{- end }}
             - name: WORDPRESS_URL
               value: {{ .Values.ingress.hosts | first | quote }}
+            - name: WORDPRESS_LOCALE
+              value: {{ .Values.wordpress.locale | quote }}
             - name: WORDPRESS_TITLE
               value: {{ .Values.wordpress.title | quote }}
             - name: WORDPRESS_ADMIN_EMAIL
