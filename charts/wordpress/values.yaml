@@ -39,3 +39,6 @@ wordpress:
   memoryLimit: 768M
   cacheHost: ""
   cachePort: ""
+  title: "My Blog"
+  adminUser: "admin"
+  adminEmail: "wp@ottimis.com"

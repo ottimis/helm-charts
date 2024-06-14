@@ -1,0 +1,9 @@
+Hai installato il tuo nuovo sito WordPress!
+
+Puoi accedere alla dashboard del tuo sito con le seguenti credenziali:
+
+Username: admin
+Password: $(kubectl get secret --namespace {{ .Release.Namespace }} {{ include "wordpress.fullname" . }} -o jsonpath="{.data.wordpress-password}" | base64 --decode)
+
+Per accedere al pannello di amministrazione, visita:
+http://{{ .Release.Name }}.{{ .Values.ingress.hosts | first }}/wp-admin

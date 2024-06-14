@@ -59,6 +59,19 @@ spec:
                 {{- if .Values.wordpress.memoryLimit }}
                 define('WP_MEMORY_LIMIT', '{{ .Values.wordpress.memoryLimit }}');
                 {{- end }}
+            - name: WORDPRESS_URL
+              value: {{ .Values.ingress.hosts | first | quote }}
+            - name: WORDPRESS_TITLE
+              value: {{ .Values.wordpress.title | quote }}
+            - name: WORDPRESS_ADMIN_EMAIL
+              value: {{ .Values.wordpress.adminEmail | quote }}
+            - name: WORDPRESS_ADMIN_USER
+              value: {{ .Values.wordpress.adminUser | quote }}
+            - name: WORDPRESS_ADMIN_PASSWORD
+              valueFrom:
+                  secretKeyRef:
+                    name: {{ include "wordpress.name" . }}-admin-password
+                    key: password
           volumeMounts:
             - name: wordpress-data
               mountPath: /var/www/html
