@@ -60,7 +60,7 @@ spec:
                 define('WP_MEMORY_LIMIT', '{{ .Values.wordpress.memoryLimit }}');
                 {{- end }}
             - name: WORDPRESS_URL
-              value: {{ include "wordpress.url" . | first | quote }}
+              value: {{ include "wordpress.url" . | quote }}
             - name: WORDPRESS_LOCALE
               value: {{ .Values.wordpress.locale | quote }}
             - name: WORDPRESS_TITLE
