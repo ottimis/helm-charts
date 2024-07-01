@@ -8,9 +8,9 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.5.4
-    created: "2024-07-01T16:51:27.177080974Z"
+    created: "2024-07-01T16:54:00.105103191Z"
     description: A Helm chart for wordpress in Kubernetes
-    digest: 6187578d970cd1412d348d65625baf782f944b99379fe2539d25457b26ba1b1a
+    digest: 975d0995e02eded78dc0e23ddf1e6c4e0bad83abf1e4fc9eeac98d29ea5c8dd6
     home: https://ottimis.com
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png
     maintainers:
@@ -21,4 +21,4 @@ entries:
     urls:
     - https://charts.otm.ai/wordpress-0.0.12.tgz
     version: 0.0.12
-generated: "2024-07-01T16:51:27.176608043Z"
+generated: "2024-07-01T16:54:00.104589587Z"
