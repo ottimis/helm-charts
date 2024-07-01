@@ -1,6 +1,6 @@
 replicaCount: 1
 storageClass: ""
-updateStrategy: "RollingUpdate"
+updateStrategy: "Recreate"
 nodeSelector: {}
 preventRoot: true
 
