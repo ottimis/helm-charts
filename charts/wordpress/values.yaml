@@ -7,7 +7,7 @@ preventRoot: true
 image:
   repository: ottimis/wordpress
   pullPolicy: IfNotPresent
-  tag: "6.5.4"
+  tag: "6.5.5"
 
 service:
   type: ClusterIP
@@ -44,3 +44,5 @@ wordpress:
   adminUser: "admin"
   adminEmail: "wp@ottimis.com"
   locale: 'it_IT'
+  security:
+    enableXmlrpc: false

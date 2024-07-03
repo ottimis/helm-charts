@@ -18,6 +18,11 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     {{- end }}
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}
+    {{/*  Add custom annotation if enableXmlrpc is not true  */}}
+    {{- if not .Values.wordpress.security.enableXmlrpc }}
+    alb.ingress.kubernetes.io/actions.deny-xmlrpc: >
+      {"Type": "fixed-response", "FixedResponseConfig": {"ContentType": "text/plain", "StatusCode": "403", "MessageBody": "Forbidden"}}
+    {{- end }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
@@ -25,6 +30,15 @@ spec:
     - host: {{ . }}
       http:
         paths:
+          {{- if not .Values.wordpress.security.enableXmlrpc }}
+          - path: /xmlrpc.php
+            pathType: Exact
+            backend:
+              service:
+                name: deny-xmlrpc
+                port:
+                  name: use-annotation
+          {{- end }}
           - path: /
             pathType: Prefix
             backend:
