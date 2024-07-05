@@ -26,11 +26,12 @@ metadata:
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
+    {{- $root := . -}}
     {{- range .Values.ingress.hosts }}
     - host: {{ . }}
       http:
         paths:
-          {{- if not .Values.wordpress.security.enableXmlrpc }}
+          {{- if not $root.Values.wordpress.security.enableXmlrpc }}
           - path: /xmlrpc.php
             pathType: Exact
             backend:
