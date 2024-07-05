@@ -9,6 +9,8 @@ metadata:
     app.kubernetes.io/version: {{ .Chart.AppVersion }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  strategy:
+    type: {{ .Values.updateStrategy }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
