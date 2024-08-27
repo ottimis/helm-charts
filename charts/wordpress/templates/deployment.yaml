@@ -63,7 +63,7 @@ spec:
                 {{- end }}
 
                 {{- if .Values.wordpress.uploadMaxFileSize }}
-                @ini_set( 'upload_max_size', '{{ .Values.wordpress.uploadMaxFileSize }}' );
+                @ini_set( 'upload_max_filesize', '{{ .Values.wordpress.uploadMaxFileSize }}' );
                 @ini_set( 'post_max_size', '{{ .Values.wordpress.uploadMaxFileSize }}' );
                 {{- end }}
             - name: WORDPRESS_URL
