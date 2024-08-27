@@ -11,13 +11,19 @@ metadata:
       {{- end }}
     {{- else if empty .Values.ingress.annotations }}
     alb.ingress.kubernetes.io/group.name: frontend-public
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
     alb.ingress.kubernetes.io/scheme: internet-facing
-    alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/success-codes: "200"
     alb.ingress.kubernetes.io/target-type: ip
+    {{- if .Values.ingress.certificateArn }}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    {{- else }}
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     {{- end }}
+    {{- end }}
+    {{- if .Values.ingress.certificateArn }}
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}
+    {{- end }}
     {{/*  Add custom annotation if enableXmlrpc is not true  */}}
     {{- if not .Values.wordpress.security.enableXmlrpc }}
     alb.ingress.kubernetes.io/actions.deny-xmlrpc: >
