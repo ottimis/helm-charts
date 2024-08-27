@@ -22,7 +22,7 @@ Define helper for retrieving WordPress URL.
 {{- end -}}
 
 {{/*
-Define helper for manage WordPress Password.
+Define helper for managing WordPress Password.
 */}}
 {{- define "wordpress.secretName" -}}
 {{- $name := include "wordpress.name" . -}}
