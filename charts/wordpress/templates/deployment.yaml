@@ -74,7 +74,7 @@ spec:
             - name: WORDPRESS_ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "wordpress.name" . }}-admin-password
+                  name: {{ include "wordpress.secretName" . }}
                   key: password
           volumeMounts:
             - name: wordpress-data

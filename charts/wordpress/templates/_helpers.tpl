@@ -20,3 +20,23 @@ Define helper for retrieving WordPress URL.
 {{- end -}}
 {{- $url -}} {{/* Return the URL */}}
 {{- end -}}
+
+{{/*
+Define helper for manage WordPress Password.
+*/}}
+{{- define "wordpress.secretName" -}}
+{{- $name := include "wordpress.name" . -}}
+{{- printf "%s-admin-password" $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{- define "wordpress.password" -}}
+{{- $secretName := include "wordpress.secretName" . -}}
+{{- $secret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
+{{- if $secret.data.password -}}
+  {{- $password := $secret.data.password | b64dec -}}
+  {{- printf "%s" $password -}}
+{{- else -}}
+  {{- $password := randAlphaNum 12 | b64enc -}}
+  {{- $password | quote -}}
+{{- end -}}
+{{- end -}}
