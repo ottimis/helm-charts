@@ -32,7 +32,7 @@ Define helper for manage WordPress Password.
 {{- define "wordpress.password" -}}
 {{- $secretName := include "wordpress.secretName" . -}}
 {{- $secret := lookup "v1" "Secret" .Release.Namespace $secretName -}}
-{{- if $secret.data.password -}}
+{{- if and $secret (hasKey $secret.data "password") -}}
   {{- $password := $secret.data.password | b64dec -}}
   {{- printf "%s" $password -}}
 {{- else -}}
