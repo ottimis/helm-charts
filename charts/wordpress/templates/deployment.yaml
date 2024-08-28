@@ -61,11 +61,6 @@ spec:
                 {{- if .Values.wordpress.memoryLimit }}
                 define('WP_MEMORY_LIMIT', '{{ .Values.wordpress.memoryLimit }}');
                 {{- end }}
-
-                {{- if .Values.wordpress.uploadMaxFileSize }}
-                @ini_set( 'upload_max_filesize', '{{ .Values.wordpress.uploadMaxFileSize }}' );
-                @ini_set( 'post_max_size', '{{ .Values.wordpress.uploadMaxFileSize }}' );
-                {{- end }}
             - name: WORDPRESS_URL
               value: {{ include "wordpress.url" . | quote }}
             - name: WORDPRESS_LOCALE
@@ -88,6 +83,11 @@ spec:
             - mountPath: /docker-entrypoint-init.d
               name: custom-postinit
             {{- end }}
+            {{- if .Values.wordpress.customIniCM }}
+            - name: custom-ini
+              mountPath: /usr/local/etc/php/conf.d/custom.ini
+              subPath: custom.ini
+            {{- end }}
       volumes:
         - name: wordpress-data
           persistentVolumeClaim:
@@ -97,6 +97,12 @@ spec:
           configMap:
             name: {{ include "wordpress.name" . }}-postinit
             defaultMode: 0755
+        {{- end }}
+        {{- if .Values.wordpress.customIniCM }}
+        - name: custom-ini
+          configMap:
+            name: {{ .Values.wordpress.customIniCM }}
+            defaultMode: 0644
         {{- end }}
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}

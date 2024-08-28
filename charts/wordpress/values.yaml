@@ -37,7 +37,7 @@ nameOverride: ""
 
 wordpress:
   memoryLimit: 768M
-  uploadMaxFileSize: 256M
+  customIniCM: ""
   cacheHost: ""
   cachePort: ""
   hostname: ""
