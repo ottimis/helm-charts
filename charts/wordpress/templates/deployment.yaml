@@ -94,7 +94,7 @@ spec:
             {{- end }}
             {{- if .Values.wordpress.customHtaccessCM }}
             - name: custom-htaccess
-              mountPath: /etc/apache2/conf-enabled/custom-htaccess.conf
+              mountPath: /etc/apache2/custom/custom-htaccess.conf
               subPath: htaccess.conf
             {{- end }}
         {{- if .Values.sftp.enabled }}
