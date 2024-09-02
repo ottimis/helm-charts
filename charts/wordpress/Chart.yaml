@@ -2,8 +2,8 @@ apiVersion: v2
 name: wordpress
 description: A Helm chart for wordpress in Kubernetes
 type: application
-version: 0.0.16
-appVersion: "6.5.5"
+version: 0.0.17
+appVersion: "6.6.1"
 home: https://ottimis.com
 maintainers:
   - name: MM

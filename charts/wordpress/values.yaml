@@ -7,7 +7,7 @@ preventRoot: true
 image:
   repository: ottimis/wordpress
   pullPolicy: IfNotPresent
-  tag: "6.5.5"
+  tag: "6.6.1"
 
 service:
   type: ClusterIP
