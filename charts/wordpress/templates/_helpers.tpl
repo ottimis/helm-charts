@@ -40,3 +40,11 @@ Define helper for managing WordPress Password.
   {{- $password | quote -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Define helper for managing SFTP users.
+*/}}
+{{- define "wordpress.sftpSecretName" -}}
+{{- $name := include "wordpress.name" . -}}
+{{- printf "%s-sftp" $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}

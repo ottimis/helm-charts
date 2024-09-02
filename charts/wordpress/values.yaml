@@ -35,6 +35,18 @@ database:
 
 nameOverride: ""
 
+sftp:
+  enabled: false
+  users:
+    - username: "wordpress"
+      # Encrypted password is 'password'
+      # openssl passwd -1 -stdin <<< password
+      password: "$1$7FmUurbc$9oCGcoGoZSY2P64vtFWtE."
+      uid: 1000
+      gid: 1000
+  image:
+    tag: "latest"
+
 wordpress:
   memoryLimit: 768M
   customIniCM: ""
@@ -47,3 +59,4 @@ wordpress:
   locale: 'it_IT'
   security:
     enableXmlrpc: false
+  customHtaccessRules: ""

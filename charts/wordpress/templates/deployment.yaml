@@ -22,7 +22,11 @@ spec:
         app.kubernetes.io/name: {{ include "wordpress.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- if .Values.preventRoot }}
+      {{/*
+        For the moment we will allow root if sftp needed
+        TODO: Remove this when we have a better solution
+      */}}
+      {{- if and .Values.preventRoot (eq .Values.sftp.enabled false) }}
       securityContext:
         fsGroup: 1000
         runAsUser: 1000
@@ -88,6 +92,23 @@ spec:
               mountPath: /usr/local/etc/php/conf.d/custom.ini
               subPath: custom.ini
             {{- end }}
+            {{- if .Values.wordpress.customHtaccessCM }}
+            - name: custom-htaccess
+              mountPath: /etc/apache2/conf-enabled/custom-htaccess.conf
+              subPath: htaccess.conf
+            {{- end }}
+        {{- if .Values.sftp.enabled }}
+        - name: sftp
+          image: atmoz/sftp
+          volumeMounts:
+            {{- range .Values.sftp.users }}
+            - name: wordpress-data
+              mountPath: /home/{{ .username }}/data
+            {{- end }}
+            - name: sftp-config
+              mountPath: /etc/sftp/users.conf
+              subPath: users.conf
+        {{- end }}
       volumes:
         - name: wordpress-data
           persistentVolumeClaim:
@@ -103,6 +124,16 @@ spec:
           configMap:
             name: {{ .Values.wordpress.customIniCM }}
             defaultMode: 0644
+        {{- end }}
+        {{- if .Values.sftp.enabled }}
+        - name: sftp-config
+          configMap:
+            name: {{ include "wordpress.name" . }}-sftp
+        {{- end }}
+        {{- if .Values.wordpress.customHtaccessCM }}
+        - name: custom-htaccess
+          configMap:
+            name: {{ .Values.wordpress.customHtaccessCM }}
         {{- end }}
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}

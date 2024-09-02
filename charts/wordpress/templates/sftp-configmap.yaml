@@ -1,0 +1,12 @@
+{{- if .Values.sftp.enabled}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "wordpress.name" . }}-sftp
+  namespace: {{ .Release.Namespace | quote }}
+data:
+  users.conf: |-
+    {{- range .Values.sftp.users }}
+    {{ .username }}:{{ .password }}:e:{{ .uid }}:{{ .gid }}:data
+    {{- end }}
+{{- end }}
