@@ -59,4 +59,4 @@ wordpress:
   locale: 'it_IT'
   security:
     enableXmlrpc: false
-  customHtaccessRules: ""
+  customHtaccessCM: ""
