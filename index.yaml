@@ -1,5 +1,26 @@
 apiVersion: v1
 entries:
+  wac:
+  - annotations:
+      artifacthub.io/images: |
+        - "https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png"
+      category: Web Application Component
+      tags: web, server, component
+    apiVersion: v2
+    appVersion: 0.0.1
+    created: "2024-09-03T16:29:11.515668009Z"
+    description: A Helm chart for OG Web Application Component
+    digest: 367f5433ce0e3010ba6a414b0288e1b76f999daf6ed2df5c8dc8d13c9ca97256
+    home: https://ottimis.com
+    icon: https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png
+    maintainers:
+    - email: mm@ottimis.com
+      name: MM
+    name: wac
+    type: application
+    urls:
+    - https://charts.otm.ai/wac-0.0.1.tgz
+    version: 0.0.1
   wordpress:
   - annotations:
       artifacthub.io/images: |
@@ -8,9 +29,9 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2024-09-02T16:29:50.94545092Z"
+    created: "2024-09-03T16:29:11.516089754Z"
     description: A Helm chart for wordpress in Kubernetes
-    digest: 63a2bf3fd8485241be7dc78f5765e9020b1b7da3221b4cbd06e084c6c3561136
+    digest: 491809e0635adbc8631aa644656d881ccb58a0f1ee6c60648b556a1356ad3ebe
     home: https://ottimis.com
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png
     maintainers:
@@ -21,4 +42,4 @@ entries:
     urls:
     - https://charts.otm.ai/wordpress-0.0.17.tgz
     version: 0.0.17
-generated: "2024-09-02T16:29:50.94485702Z"
+generated: "2024-09-03T16:29:11.515208173Z"
