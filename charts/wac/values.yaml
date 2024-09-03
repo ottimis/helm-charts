@@ -1,13 +1,12 @@
 replicaCount: 1
 storageClass: ""
-updateStrategy: "Recreate"
+updateStrategy: "RollingUpdate"
 nodeSelector: {}
 preventRoot: true
 
 image:
-  repository: ottimis/wordpress
+  repository: 348705108113.dkr.ecr.eu-central-1.amazonaws.com/ottimis/php:8.3.11-bullseye
   pullPolicy: IfNotPresent
-  tag: "6.6.1"
 
 service:
   type: ClusterIP
@@ -23,22 +22,13 @@ ingress:
 persistence:
   accessModes:
     - ReadWriteOnce
-  enabled: true
+  enabled: false
   size: 8Gi
-
-database:
-  host: ""
-  name: ""
-  port: ""
-  user: ""
-  existingSecret: ""
-
-nameOverride: ""
 
 sftp:
   enabled: false
   users:
-    - username: "wordpress"
+    - username: "username"
       # Encrypted password is 'password'
       # openssl passwd -1 -stdin <<< password
       password: "$1$7FmUurbc$9oCGcoGoZSY2P64vtFWtE."
@@ -47,16 +37,8 @@ sftp:
   image:
     tag: "latest"
 
-wordpress:
-  memoryLimit: 768M
-  customIniCM: ""
-  cacheHost: ""
-  cachePort: ""
-  hostname: ""
-  title: "My Blog"
-  adminUser: "admin"
-  adminEmail: "wp@ottimis.com"
-  locale: 'it_IT'
-  security:
-    enableXmlrpc: false
+deployment:
   customHtaccessCM: ""
+  existingSecretsEnv: []
+  existingConfigMapsEnv: []
+  customIniCM: ""

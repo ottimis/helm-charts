@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "wac.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "wac.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  strategy:
+    type: {{ .Values.updateStrategy }}
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "wac.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "wac.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{/*
+        For the moment we will allow root if sftp needed
+        TODO: Remove this when we have a better solution
+      */}}
+      {{- if and .Values.preventRoot (eq .Values.sftp.enabled false) }}
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+      {{- end }}
+      containers:
+        - name: {{ include "wac.name" . }}
+          image: "{{ .Values.image.repository }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 8080
+              name: http
+          {{- if .Values.preventRoot }}
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          {{- end }}
+          envFrom:
+            {{- range .Values.deployment.existingConfigMapsEnv }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end}}
+            {{- range .Values.deployment.existingSecretsEnv }}
+            - secretRef:
+                name: {{ . }}
+            {{- end}}
+          volumeMounts:
+            {{- if .Values.deployment.customIniCM }}
+            - name: custom-ini
+              mountPath: /usr/local/etc/php/conf.d/custom.ini
+              subPath: custom.ini
+            {{- end }}
+            {{- if .Values.deployment.customHtaccessCM }}
+            - name: custom-htaccess
+              mountPath: /etc/apache2/custom/custom-htaccess.conf
+              subPath: htaccess.conf
+            {{- end }}
+        {{- if and .Values.sftp.enabled .Values.persistence.enabled }}
+        - name: sftp
+          image: atmoz/sftp
+          volumeMounts:
+            {{- range .Values.sftp.users }}
+            - name: data
+              mountPath: /home/{{ .username }}/data
+            {{- end }}
+            - name: sftp-config
+              mountPath: /etc/sftp/users.conf
+              subPath: users.conf
+        {{- end }}
+      volumes:
+        {{- if .Values.persistence.enabled }}
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "wac.name" . }}
+        {{- end}}
+        {{- if .Values.deployment.customIniCM }}
+        - name: custom-ini
+          configMap:
+            name: {{ .Values.deployment.customIniCM }}
+            defaultMode: 0644
+        {{- end }}
+        {{- if .Values.sftp.enabled }}
+        - name: sftp-config
+          configMap:
+            name: {{ include "wac.name" . }}-sftp
+        {{- end }}
+        {{- if .Values.deployment.customHtaccessCM }}
+        - name: custom-htaccess
+          configMap:
+            name: {{ .Values.deployment.customHtaccessCM }}
+        {{- end }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}

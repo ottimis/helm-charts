@@ -1,0 +1,16 @@
+apiVersion: v2
+name: wac
+description: A Helm chart for OG Web Application Component
+type: application
+version: 0.0.1
+appVersion: "0.0.1"
+home: https://ottimis.com
+maintainers:
+  - name: MM
+    email: mm@ottimis.com
+annotations:
+  category: "Web Application Component"
+  tags: "web, server, component"
+  artifacthub.io/images: |
+    - "https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png"
+icon: https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png

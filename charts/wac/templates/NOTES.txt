@@ -1,0 +1,3 @@
+Hai installato il tuo nuovo sito WAC!
+
+https://{{ .Values.ingress.hosts | first }}
