@@ -13,6 +13,8 @@ metadata:
     alb.ingress.kubernetes.io/group.name: frontend-public
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/success-codes: "200"
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: '30'
+    alb.ingress.kubernetes.io/unhealthy-threshold-count: '4' # 2 minutes
     alb.ingress.kubernetes.io/target-type: ip
     {{- if .Values.ingress.certificateArn }}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
