@@ -66,24 +66,38 @@ spec:
               mountPath: /etc/apache2/custom/custom-htaccess.conf
               subPath: htaccess.conf
             {{- end }}
+            {{- range .Values.volumes }}
+            - name: {{ include "wac.name" $ }}-{{ .name }}
+              mountPath: {{ .path }}
+            {{- end }}
         {{- if and .Values.sftp.enabled .Values.persistence.enabled }}
         - name: sftp
           image: atmoz/sftp
           volumeMounts:
-            {{- range .Values.sftp.users }}
+            {{- range $volume := .Values.volumes }}
+            {{- if $volume.sftpAccess }}
+            {{- range $sftpUser := $.Values.sftp.users }}
             - name: data
-              mountPath: /home/{{ .username }}/data
+              mountPath: /home/{{ $sftpUser.username }}/{{ $volume.name }}
             {{- end }}
+            {{- end}}
+            {{- end}}
             - name: sftp-config
               mountPath: /etc/sftp/users.conf
               subPath: users.conf
         {{- end }}
       volumes:
-        {{- if .Values.persistence.enabled }}
-        - name: data
+        {{- range .Values.volumes }}
+        - name: {{ include "wac.name" $ }}-{{ .name }}
+          {{- if .configMap }}
+          configMap:
+            name: {{ .configMap }}
+          {{- else }}
           persistentVolumeClaim:
-            claimName: {{ include "wac.name" . }}
-        {{- end}}
+            claimName: {{ include "wac.name" $ }}-{{ .name }}
+          {{- end }}
+        {{- end }}
+
         {{- if .Values.deployment.customIniCM }}
         - name: custom-ini
           configMap:
