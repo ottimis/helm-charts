@@ -38,17 +38,12 @@ deployment:
   existingConfigMapsEnv: []
   customIniCM: ""
 
-volumes:
-  - name: ""
-    path: ""
-    configMap: ""
-    accessMode: "ReadWriteOnce"
-    size: "8Gi"
-    storageClass: "gp3"
-    # Need sftp.enabled: true to use this
-    sftpAccess: false
-#  - name: data
+volumes: []
+#  - name: ""
 #    path: /var/www/html
-#  - name: sftp-config
-#    path: /etc/sftp/users.conf
 #    configMap: ""
+#    accessMode: "ReadWriteOnce"
+#    size: "8Gi"
+#    storageClass: "gp3"
+#    # Need sftp.enabled: true to use this
+#    sftpAccess: false
