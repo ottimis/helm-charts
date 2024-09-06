@@ -36,7 +36,7 @@ spec:
   rules:
     {{- $root := . -}}
     {{- range .Values.ingress.hosts }}
-    - host: {{ . }}
+    - host: {{ . | quote }}
       http:
         paths:
           {{- if not $root.Values.wordpress.security.enableXmlrpc }}
