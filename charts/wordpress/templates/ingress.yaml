@@ -5,11 +5,9 @@ metadata:
   name: {{ include "wordpress.name" . }}
   namespace: {{ .Release.Namespace }}
   annotations:
-    {{- if .Values.ingress.annotations }}
-      {{- range $key, $value := .Values.ingress.annotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
-    {{- else if empty .Values.ingress.annotations }}
+    {{- if .Values.ingress.customAnnotations }}
+    {{- toYaml .Values.ingress.customAnnotations | nindent 4 }}
+    {{- end }}
     alb.ingress.kubernetes.io/group.name: frontend-public
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/success-codes: "200"
@@ -21,7 +19,6 @@ metadata:
     alb.ingress.kubernetes.io/ssl-redirect: "443"
     {{- else }}
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
-    {{- end }}
     {{- end }}
     {{- if .Values.ingress.certificateArn }}
     alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress.certificateArn }}

@@ -16,7 +16,7 @@ ingress:
   enabled: false
   className: "alb"
   certificateArn: ""
-  annotations: {}
+  customAnnotations: {}
   hosts: []
   path: "/"
 
