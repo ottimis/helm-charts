@@ -8,9 +8,9 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-09-07T11:45:29.993239173Z"
+    created: "2024-10-13T16:31:15.539795051Z"
     description: A Helm chart for OG Web Application Component
-    digest: d9d59bdf5c7acd3f450a0bf0fa026101f9e5044d52eb2c520597b502539ef6c9
+    digest: 189740aaca77fc7cdc9a6421150d13162c2c7b8243948bf583b1a9aaa8fe951b
     home: https://ottimis.com
     icon: https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png
     maintainers:
@@ -29,9 +29,9 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2024-09-07T11:45:29.993674195Z"
+    created: "2024-10-13T16:31:15.540211564Z"
     description: A Helm chart for wordpress in Kubernetes
-    digest: b0ee96b14bdd8ad9fb145f4d66abfa0b69a7e828fdede89731e7ab93c9c93b4c
+    digest: 7161f4317261648d625f39e10d5a2152f9d1e4ebf15549be7723b3073561649b
     home: https://ottimis.com
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png
     maintainers:
@@ -42,4 +42,4 @@ entries:
     urls:
     - https://charts.otm.ai/wordpress-0.0.18.tgz
     version: 0.0.18
-generated: "2024-09-07T11:45:29.992597184Z"
+generated: "2024-10-13T16:31:15.539311883Z"
