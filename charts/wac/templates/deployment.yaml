@@ -66,18 +66,22 @@ spec:
               mountPath: /etc/apache2/custom/custom-htaccess.conf
               subPath: htaccess.conf
             {{- end }}
-            {{- range .Values.volumes }}
-            - name: {{ include "wac.name" $ }}-{{ .name }}
-              mountPath: {{ .path }}
+            {{- range $volume := .Values.volumes }}
+            {{- range $mountPath := $volume.mountPaths }}
+            - name: {{ include "wac.name" $ }}-{{ $volume.name }}
+              mountPath: {{ $mountPath.path }}
+              subPath: {{ $mountPath.name }}
             {{- end }}
-        {{- if and .Values.sftp.enabled .Values.persistence.enabled }}
+            {{- end }}
+        # Check if sftp is enabled and volumes is not empty
+        {{- if and .Values.sftp.enabled (not (empty .Values.volumes)) }}
         - name: sftp
           image: atmoz/sftp
           volumeMounts:
             {{- range $volume := .Values.volumes }}
             {{- if $volume.sftpAccess }}
             {{- range $sftpUser := $.Values.sftp.users }}
-            - name: data
+            - name: {{ include "wac.name" $ }}-{{ $volume.name }}
               mountPath: /home/{{ $sftpUser.username }}/{{ $volume.name }}
             {{- end }}
             {{- end}}

@@ -6,7 +6,9 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
 data:
   users.conf: |-
-    {{- range .Values.sftp.users }}
-    {{ .username }}:{{ .password }}:e:{{ .uid }}:{{ .gid }}:data
+    {{- range $user := .Values.sftp.users }}
+    {{- range $volume := $.Values.volumes }}
+    {{ $user.username }}:{{ $user.password }}:e:{{ $user.uid }}:{{ $user.gid }}:{{ $volume.name }}
+    {{- end }}
     {{- end }}
 {{- end }}
