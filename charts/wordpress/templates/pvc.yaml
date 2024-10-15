@@ -7,6 +7,9 @@ metadata:
   labels:
     app.kubernetes.io/name: {{ include "wordpress.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
+  # This annotation is used to keep the PVC when the chart is deleted
+  annotations:
+    "helm.sh/resource-policy": keep
 spec:
   accessModes:
     {{- range .Values.persistence.accessModes }}
