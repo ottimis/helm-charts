@@ -8,9 +8,9 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2024-11-04T18:14:09.619301417Z"
+    created: "2024-11-04T18:34:38.611226672Z"
     description: A Helm chart for OG Web Application Component
-    digest: 2e36ef732f9db4fd09a9ecc83cccfc3c74b29a3eaa5a3a0075c96b48c2b99ff1
+    digest: dea45744fd89035e2aacac34eff5ffc7570abc1d8812159cd6e45a33f9c46bda
     home: https://ottimis.com
     icon: https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png
     maintainers:
@@ -29,9 +29,9 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2024-11-04T18:14:09.620523583Z"
+    created: "2024-11-04T18:34:38.612489833Z"
     description: A Helm chart for wordpress in Kubernetes
-    digest: 641e412a001011c8d281a5822ff70f5626ef4041a7964b93d9fc25eaed627807
+    digest: 8d4f0304e7470ab1b8e8c386a842190cdbb3507ea96c9b2e2ed43ad8190939ee
     home: https://ottimis.com
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png
     maintainers:
@@ -49,7 +49,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2024-11-04T18:14:09.62011961Z"
+    created: "2024-11-04T18:34:38.612067256Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: fe2cfb7d33f9dae96449900f3aa0e98b96b650ca4e54db0fd0484861afe5d89a
     home: https://ottimis.com
@@ -69,7 +69,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2024-11-04T18:14:09.619726669Z"
+    created: "2024-11-04T18:34:38.611662273Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 7161f4317261648d625f39e10d5a2152f9d1e4ebf15549be7723b3073561649b
     home: https://ottimis.com
@@ -82,4 +82,4 @@ entries:
     urls:
     - https://charts.otm.ai/wordpress-0.0.18.tgz
     version: 0.0.18
-generated: "2024-11-04T18:14:09.618834236Z"
+generated: "2024-11-04T18:34:38.610683037Z"
