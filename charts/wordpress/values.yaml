@@ -5,7 +5,7 @@ nodeSelector: { }
 preventRoot: true
 resources:
   limits:
-    cpu: 80m
+    cpu: 200m
     memory: 400Mi
   requests:
     cpu: 50m
