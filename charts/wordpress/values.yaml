@@ -1,8 +1,15 @@
 replicaCount: 1
 storageClass: ""
 updateStrategy: "Recreate"
-nodeSelector: {}
+nodeSelector: { }
 preventRoot: true
+resources:
+  limits:
+    cpu: 80m
+    memory: 400Mi
+  requests:
+    cpu: 50m
+    memory: 256Mi
 
 image:
   repository: ottimis/wordpress
@@ -17,8 +24,8 @@ ingress:
   enabled: false
   className: "alb"
   certificateArn: ""
-  customAnnotations: {}
-  hosts: []
+  customAnnotations: { }
+  hosts: [ ]
 
 persistence:
   accessModes:
