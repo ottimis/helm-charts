@@ -36,6 +36,8 @@ spec:
         - name: {{ include "wac.name" . }}
           image: "{{ .Values.image.repository }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          resources:
+            {{- toYaml .Values.deployment.resources | nindent 12 }}
           ports:
             - containerPort: 8080
               name: http

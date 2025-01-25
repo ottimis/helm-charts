@@ -11,6 +11,7 @@ image:
 service:
   type: ClusterIP
   port: 80
+  targetPort: 8080
 
 ingress:
   enabled: false
@@ -37,10 +38,13 @@ deployment:
   existingSecretsEnv: []
   existingConfigMapsEnv: []
   customIniCM: ""
+  resources: {}
 
 volumes: []
 #  - name: ""
-#    path: /var/www/html
+#    mountPaths:
+#      - name: moduli
+#        path: /var/www/html
 #    configMap: ""
 #    accessMode: "ReadWriteOnce"
 #    size: "8Gi"

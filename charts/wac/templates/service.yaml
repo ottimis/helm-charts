@@ -10,7 +10,7 @@ spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: 8080
+      targetPort: {{ .Values.service.targetPort }}
   selector:
     app.kubernetes.io/name: {{ include "wac.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
