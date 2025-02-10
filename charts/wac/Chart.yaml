@@ -2,7 +2,7 @@ apiVersion: v2
 name: wac
 description: A Helm chart for OG Web Application Component
 type: application
-version: 0.2.1
+version: 0.3.0
 appVersion: "0.0.1"
 home: https://ottimis.com
 maintainers:
