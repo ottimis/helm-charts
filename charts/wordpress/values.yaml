@@ -14,11 +14,15 @@ resources:
 image:
   repository: ottimis/wordpress
   pullPolicy: IfNotPresent
-  tag: "6.6.1"
+  tag: "6.7.0"
 
 service:
   type: ClusterIP
   port: 80
+
+deployment:
+  uid: 1000
+  gid: 1000
 
 ingress:
   enabled: false
