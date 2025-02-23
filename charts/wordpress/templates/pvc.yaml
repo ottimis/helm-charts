@@ -12,9 +12,7 @@ metadata:
     "helm.sh/resource-policy": keep
 spec:
   accessModes:
-    {{- range .Values.persistence.accessModes }}
-    - {{ . }}
-    {{- end }}
+    - {{ .Values.persistence.accessMode }}
   resources:
     requests:
       storage: {{ .Values.persistence.size }}

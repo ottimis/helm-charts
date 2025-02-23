@@ -32,8 +32,7 @@ ingress:
   hosts: [ ]
 
 persistence:
-  accessModes:
-    - ReadWriteOnce
+  accessMode: ReadWriteOnce
   enabled: true
   size: 8Gi
 
