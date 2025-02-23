@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "wordpress.name" . }}-salt-keys
+  annotations:
+    helm.sh/resource-policy: keep
+type: Opaque
+data:
+  WORDPRESS_AUTH_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.authKey | b64enc | quote }}
+  WORDPRESS_SECURE_AUTH_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.secureAuthKey | b64enc | quote }}
+  WORDPRESS_LOGGED_IN_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.loggedInKey | b64enc | quote }}
+  WORDPRESS_NONCE_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.nonceKey | b64enc | quote }}
+  WORDPRESS_AUTH_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.authSalt | b64enc | quote }}
+  WORDPRESS_SECURE_AUTH_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.secureAuthSalt | b64enc | quote }}
+  WORDPRESS_LOGGED_IN_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.loggedInSalt | b64enc | quote }}
+  WORDPRESS_NONCE_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.nonceSalt | b64enc | quote }}

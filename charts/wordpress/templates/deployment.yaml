@@ -82,6 +82,9 @@ spec:
                 secretKeyRef:
                   name: {{ include "wordpress.secretName" . }}
                   key: password
+          envFrom:
+            - secretRef:
+                name: {{ include "wordpress.name" . }}-salt-keys
           volumeMounts:
             - name: wordpress-data
               {{- if eq .Values.persistence.accessMode "ReadWriteOnce" }}

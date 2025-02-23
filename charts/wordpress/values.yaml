@@ -70,3 +70,12 @@ wordpress:
   security:
     enableXmlrpc: false
   customHtaccessCM: ""
+  saltKeys:
+    nonceSalt: ""
+    loggedInSalt: ""
+    secureAuthSalt: ""
+    authSalt: ""
+    nonceKey: ""
+    loggedInKey: ""
+    secureAuthKey: ""
+    authKey: ""
