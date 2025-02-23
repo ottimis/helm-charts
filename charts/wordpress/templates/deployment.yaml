@@ -84,9 +84,9 @@ spec:
                   key: password
           volumeMounts:
             - name: wordpress-data
-              {{- if .Values.persistence.accessMode eq "ReadWriteOnce" }}
+              {{- if eq .Values.persistence.accessMode "ReadWriteOnce" }}
               mountPath: /var/www/html
-              {{- else if .Values.persistence.accessMode eq "ReadWriteMany" }}
+              {{- else if eq .Values.persistence.accessMode "ReadWriteMany" }}
               mountPath: /var/www/html/wp-content
               {{- end }}
             {{- if and .Values.wordpress.cacheHost .Values.wordpress.cachePort }}
