@@ -43,7 +43,7 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           ports:
-            - containerPort: 8080
+            - containerPort: {{ default 8080 .Values.deployment.port }}
               name: http
           {{- if .Values.preventRoot }}
           securityContext:

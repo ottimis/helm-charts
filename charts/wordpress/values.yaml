@@ -23,6 +23,7 @@ service:
 deployment:
   uid: 1000
   gid: 1000
+  port: 8080
 
 ingress:
   enabled: false
