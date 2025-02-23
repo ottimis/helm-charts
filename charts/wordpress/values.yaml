@@ -1,6 +1,6 @@
 replicaCount: 1
 storageClass: ""
-updateStrategy: "Recreate"
+updateStrategy: ""
 nodeSelector: { }
 preventRoot: true
 resources:

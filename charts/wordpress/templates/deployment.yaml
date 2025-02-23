@@ -10,7 +10,11 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   strategy:
+    {{- if .Values.updateStrategy }}
     type: {{ .Values.updateStrategy }}
+    {{- else }}
+    type: {{ if eq .Values.persistence.accessMode "ReadWriteOnce" }}Recreate{{ else if eq .Values.persistence.accessMode "ReadWriteMany" }}RollingUpdate{{ else }}RollingUpdate{{ end }}
+    {{- end }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
