@@ -8,7 +8,7 @@ metadata:
     {{- if .Values.ingress.customAnnotations }}
     {{- toYaml .Values.ingress.customAnnotations | nindent 4 }}
     {{- end }}
-    alb.ingress.kubernetes.io/group.name: frontend-public
+    alb.ingress.kubernetes.io/group.name: {{ .Values.ingress.groupName }}
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/success-codes: "200"
     alb.ingress.kubernetes.io/target-type: ip
