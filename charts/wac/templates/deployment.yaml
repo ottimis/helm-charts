@@ -32,6 +32,9 @@ spec:
         runAsUser: {{ .Values.deployment.uid }}
         runAsNonRoot: true
       {{- end }}
+      {{- if .Values.deployment.serviceAccountName }}
+      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
+      {{- end }}
       containers:
         - name: {{ include "wac.name" . }}
           image: "{{ .Values.image.repository }}"

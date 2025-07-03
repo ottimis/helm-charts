@@ -42,6 +42,7 @@ deployment:
   resources: {}
   uid: 1000
   gid: 1000
+  serviceAccountName: ""
 
 volumes: []
 #  - name: ""
