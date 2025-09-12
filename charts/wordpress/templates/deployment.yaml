@@ -35,6 +35,7 @@ spec:
         fsGroup: {{ .Values.deployment.gid }}
         runAsUser: {{ .Values.deployment.uid }}
         runAsNonRoot: true
+        fsGroupChangePolicy: {{ .Values.persistence.fsGroupChangePolicy | default "OnRootMismatch" }}
       {{- end }}
       containers:
         - name: wordpress

@@ -36,6 +36,7 @@ persistence:
   accessMode: ReadWriteOnce
   enabled: true
   size: 8Gi
+  fsGroupChangePolicy: "OnRootMismatch"
 
 database:
   host: ""
