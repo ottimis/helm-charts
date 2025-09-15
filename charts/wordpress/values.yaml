@@ -24,6 +24,11 @@ deployment:
   uid: 1000
   gid: 1000
   port: 8080
+  # key-value pairs to set node affinity
+  # Example:
+  # nodeAffinity:
+  #   disktype: ssd
+  nodeAffinity: { }
 
 ingress:
   enabled: false

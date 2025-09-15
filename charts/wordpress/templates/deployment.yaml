@@ -26,6 +26,46 @@ spec:
         app.kubernetes.io/name: {{ include "wordpress.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- $hasNodeAff := not (empty .Values.deployment.nodeAffinity) }}
+      {{- if or $hasNodeAff .Values.deployment.preventSameNode }}
+      {{- if $hasNodeAff }}
+      tolerations:
+        {{- range $key, $value := .Values.deployment.nodeAffinity }}
+        - key: {{ $key | quote }}
+          operator: "Equal"
+          value: {{ $value | quote }}
+          effect: "NoSchedule"
+        {{- end }}
+      {{- end }}
+      affinity:
+        {{- if $hasNodeAff }}
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                {{- range $key, $value := .Values.deployment.nodeAffinity }}
+                - key: {{ $key | quote }}
+                  operator: In
+                  values:
+                    - {{ $value | quote }}
+                {{- end }}
+        {{- end }}
+        {{- if .Values.deployment.preventSameNode }}
+        # 3) Anti-affinity to avoid to schedule on the same node
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app.kubernetes.io/name
+                      operator: In
+                      values:
+                        - {{ include "wac.name" . | quote }}
+                topologyKey: "kubernetes.io/hostname"
+        {{- end }}
+      {{- end }}
+
       {{/*
         For the moment we will allow root if sftp needed
         TODO: Remove this when we have a better solution
