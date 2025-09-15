@@ -22,20 +22,17 @@ spec:
         app.kubernetes.io/name: {{ include "wac.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-      {{- if not (empty .Values.deployment.scheduleTolerations) }}
-      # 1) Tolerate nodes with taint "key=value:NoSchedule" (tolerations)
+      {{- $hasNodeAff := not (empty .Values.deployment.nodeAffinity) }}
+      {{- if or $hasNodeAff .Values.deployment.preventSameNode }}
+      {{- if $hasNodeAff }}
       tolerations:
-        {{- range $key, $value := .Values.deployment.scheduleTolerations }}
+        {{- range $key, $value := .Values.deployment.nodeAffinity }}
         - key: {{ $key | quote }}
           operator: "Equal"
           value: {{ $value | quote }}
           effect: "NoSchedule"
         {{- end }}
       {{- end }}
-
-      {{- $hasNodeAff := not (empty .Values.deployment.nodeAffinity) }}
-      {{- if or $hasNodeAff .Values.deployment.preventSameNode }}
-      # 2) Required nodes with label (requiredDuringScheduling)
       affinity:
         {{- if $hasNodeAff }}
         nodeAffinity:

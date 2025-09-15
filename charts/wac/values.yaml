@@ -48,11 +48,6 @@ deployment:
     # nodeAffinity:
     #   disktype: ssd
   nodeAffinity: {}
-  # List of tolerations for pod assignment
-  # Example:
-    # scheduleTolerations:
-    #   workload-type: batch
-  scheduleTolerations: {}
   preventSameNode: true
 
 volumes: []
