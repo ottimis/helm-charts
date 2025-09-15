@@ -43,6 +43,17 @@ deployment:
   uid: 1000
   gid: 1000
   serviceAccountName: ""
+  # key-value pairs to set node affinity
+  # Example:
+    # nodeAffinity:
+    #   disktype: ssd
+  nodeAffinity: {}
+  # List of tolerations for pod assignment
+  # Example:
+    # scheduleTolerations:
+    #   workload-type: batch
+  scheduleTolerations: {}
+  preventSameNode: true
 
 volumes: []
 #  - name: ""
