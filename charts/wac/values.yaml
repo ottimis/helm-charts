@@ -42,6 +42,7 @@ deployment:
   resources: {}
   uid: 1000
   gid: 1000
+  gracefulShutdownSeconds: 60
   serviceAccountName: ""
   # key-value pairs to set node affinity
   # Example:

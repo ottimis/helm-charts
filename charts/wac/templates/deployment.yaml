@@ -75,6 +75,7 @@ spec:
       {{- if .Values.deployment.serviceAccountName }}
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       {{- end }}
+      terminationGracePeriodSeconds: {{ add (default 0 .Values.deployment.gracefulShutdownSeconds) 10 }}
       containers:
         - name: {{ include "wac.name" . }}
           image: "{{ .Values.image.repository }}"
@@ -90,6 +91,13 @@ spec:
             runAsGroup: {{ .Values.deployment.gid }}
             runAsNonRoot: true
             allowPrivilegeEscalation: false
+          {{- end }}
+          {{- $gs := int (default 0 .Values.deployment.gracefulShutdownSeconds) }}
+          {{- if gt $gs 0 }}
+          lifecycle:
+            preStop:
+              exec:
+                command: [ "/bin/sh", "-c", "sleep {{ $gs }}" ]
           {{- end }}
           envFrom:
             {{- range .Values.deployment.existingConfigMapsEnv }}
