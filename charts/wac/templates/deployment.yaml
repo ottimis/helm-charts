@@ -100,7 +100,7 @@ spec:
                 command: [ "/bin/sh", "-c", "sleep {{ $gs }}" ]
           {{- end }}
           envFrom:
-            {{- range .Values.deployment.existingConfigMapsEnv }}
+            {{- range .Values.deployment. existingConfigMapsEnv }}
             - configMapRef:
                 name: {{ . }}
             {{- end}}
