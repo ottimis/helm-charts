@@ -29,6 +29,15 @@ spec:
     - host: {{ . | quote }}
       http:
         paths:
+          {{- range $.Values.ingress.additionalRoutesBefore }}
+          - path: {{ .path | quote }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .serviceName }}
+                port:
+                  number: {{ .servicePort | default 8080 }}
+          {{- end }}
           - path: {{ $.Values.ingress.path | quote }}
             pathType: Prefix
             backend:
@@ -36,5 +45,14 @@ spec:
                 name: {{ include "wac.name" $ }}
                 port:
                   number: 80
+          {{- range $.Values.ingress.additionalRoutesAfter }}
+          - path: {{ .path | quote }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .serviceName }}
+                port:
+                  number: {{ .servicePort | default 8080 }}
           {{- end }}
     {{- end }}
+{{- end }}

@@ -21,7 +21,11 @@ ingress:
   customAnnotations: {}
   hosts: []
   path: "/"
-
+  additionalRoutesBefore: []
+  additionalRoutesAfter: []
+  # - path: /anotherpath
+  #   serviceName: another-service
+  #   servicePort: 80
 sftp:
   enabled: false
   users:
