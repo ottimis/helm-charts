@@ -42,6 +42,11 @@ deployment:
   customHtaccessCM: ""
   existingSecretsEnv: []
   existingConfigMapsEnv: []
+  # key-value pairs to set environment variables
+    # Example:
+    # env:
+    #   ENV_VAR_NAME: "value"
+  env: {}
   customIniCM: ""
   resources: {}
   uid: 1000
