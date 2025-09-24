@@ -1,0 +1,166 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "wac values schema",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": { "type": "integer", "minimum": 0 },
+    "storageClass": { "type": "string" },
+    "updateStrategy": { "type": "string", "enum": ["RollingUpdate", "Recreate"] },
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "preventRoot": { "type": "boolean" },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": { "type": "string" },
+        "pullPolicy": { "type": "string", "enum": ["IfNotPresent", "Always", "Never"] }
+      },
+      "additionalProperties": false
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "targetPort": { "type": ["integer", "string" ] }
+      },
+      "additionalProperties": false
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "className": { "type": "string" },
+        "certificateArn": { "type": "string" },
+        "groupName": { "type": "string" },
+        "customAnnotations": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean"] }
+        },
+        "hosts": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "path": { "type": "string" },
+        "additionalRoutesBefore": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "serviceName": { "type": "string" },
+              "servicePort": { "type": ["integer", "string"] }
+            },
+            "required": ["path", "serviceName"],
+            "additionalProperties": false
+          }
+        },
+        "additionalRoutesAfter": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "path": { "type": "string" },
+              "serviceName": { "type": "string" },
+              "servicePort": { "type": ["integer", "string"] }
+            },
+            "required": ["path", "serviceName"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sftp": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string" },
+              "password": { "type": "string" },
+              "uid": { "type": "integer", "minimum": 0 },
+              "gid": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["username", "password"],
+            "additionalProperties": false
+          }
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "tag": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "customHtaccessCM": { "type": "string" },
+        "existingSecretsEnv": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "existingConfigMapsEnv": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "env": {
+          "type": "object",
+          "description": "Mappa di variabili d'ambiente",
+          "additionalProperties": { "type": "string" }
+        },
+        "customIniCM": { "type": "string" },
+        "resources": { "type": "object" },
+        "uid": { "type": "integer", "minimum": 0 },
+        "gid": { "type": "integer", "minimum": 0 },
+        "gracefulShutdownSeconds": { "type": "integer", "minimum": 0 },
+        "serviceAccountName": { "type": "string" },
+        "nodeAffinity": {
+          "type": "object",
+          "description": "Mappa chiave->valore per node affinity/tolerations",
+          "additionalProperties": { "type": "string" }
+        },
+        "preventSameNode": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "volumes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "mountPaths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "path": { "type": "string" }
+              },
+              "required": ["name", "path"],
+              "additionalProperties": false
+            }
+          },
+          "configMap": { "type": "string" },
+          "accessMode": { "type": "string", "enum": ["ReadWriteOnce", "ReadWriteMany", "ReadOnlyMany"] },
+          "size": { "type": "string" },
+          "storageClass": { "type": "string" },
+          "sftpAccess": { "type": "boolean" }
+        },
+        "required": ["name", "mountPaths"],
+        "additionalProperties": false
+      }
+    }
+  }
+}

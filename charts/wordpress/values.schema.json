@@ -1,0 +1,174 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "wordpress values schema",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "replicaCount": { "type": "integer", "minimum": 0 },
+    "storageClass": { "type": "string" },
+    "updateStrategy": { "type": "string", "enum": ["", "RollingUpdate", "Recreate"] },
+    "nodeSelector": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "preventRoot": { "type": "boolean" },
+    "resources": {
+      "type": "object",
+      "properties": {
+        "limits": {
+          "type": "object",
+          "properties": {
+            "cpu": { "type": ["string", "number"] },
+            "memory": { "type": "string" }
+          },
+          "additionalProperties": true
+        },
+        "requests": {
+          "type": "object",
+          "properties": {
+            "cpu": { "type": ["string", "number"] },
+            "memory": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "image": {
+      "type": "object",
+      "properties": {
+        "repository": { "type": "string" },
+        "pullPolicy": { "type": "string", "enum": ["IfNotPresent", "Always", "Never"] },
+        "tag": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "service": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+      },
+      "additionalProperties": true
+    },
+    "deployment": {
+      "type": "object",
+      "properties": {
+        "uid": { "type": "integer", "minimum": 0 },
+        "gid": { "type": "integer", "minimum": 0 },
+        "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "nodeAffinity": {
+          "type": "object",
+          "description": "Mappa chiave->valore per node affinity/tolerations",
+          "additionalProperties": { "type": "string" }
+        },
+        "preventSameNode": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "ingress": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "className": { "type": "string" },
+        "certificateArn": { "type": "string" },
+        "customAnnotations": {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean"] }
+        },
+        "hosts": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "persistence": {
+      "type": "object",
+      "properties": {
+        "accessMode": { "type": "string", "enum": ["ReadWriteOnce", "ReadWriteMany"] },
+        "enabled": { "type": "boolean" },
+        "size": { "type": "string" },
+        "fsGroupChangePolicy": { "type": "string", "enum": ["OnRootMismatch", "Always"] }
+      },
+      "additionalProperties": false
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "host": { "type": "string" },
+        "name": { "type": "string" },
+        "port": { "type": ["string", "integer"] },
+        "user": { "type": "string" },
+        "existingSecret": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "nameOverride": { "type": "string" },
+    "sftp": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "users": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "username": { "type": "string" },
+              "password": { "type": "string" },
+              "uid": { "type": "integer", "minimum": 0 },
+              "gid": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["username", "password"],
+            "additionalProperties": false
+          }
+        },
+        "image": {
+          "type": "object",
+          "properties": {
+            "tag": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "wordpress": {
+      "type": "object",
+      "properties": {
+        "memoryLimit": { "type": "string" },
+        "customIniCM": { "type": "string" },
+        "cacheHost": { "type": "string" },
+        "cachePort": { "type": ["string", "integer"] },
+        "hostname": { "type": "string" },
+        "title": { "type": "string" },
+        "adminUser": { "type": "string" },
+        "adminEmail": { "type": "string" },
+        "locale": { "type": "string" },
+        "security": {
+          "type": "object",
+          "properties": {
+            "enableXmlrpc": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "customHtaccessCM": { "type": "string" },
+        "saltKeys": {
+          "type": "object",
+          "properties": {
+            "nonceSalt": { "type": "string" },
+            "loggedInSalt": { "type": "string" },
+            "secureAuthSalt": { "type": "string" },
+            "authSalt": { "type": "string" },
+            "nonceKey": { "type": "string" },
+            "loggedInKey": { "type": "string" },
+            "secureAuthKey": { "type": "string" },
+            "authKey": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}
