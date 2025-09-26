@@ -1,5 +1,5 @@
 {{- range .Values.volumes }}
-{{- if not .configMap }}
+{{- if and (not .configMap) (not .secret) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

@@ -44,7 +44,7 @@ spec:
               service:
                 name: {{ include "wac.name" $ }}
                 port:
-                  number: 80
+                  number: {{ $.Values.service.port }}
           {{- range $.Values.ingress.additionalRoutesAfter }}
           - path: {{ .path | quote }}
             pathType: Prefix
