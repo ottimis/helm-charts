@@ -153,6 +153,7 @@
             }
           },
           "configMap": { "type": "string" },
+          "secret": { "type": "string" },
           "accessMode": { "type": "string", "enum": ["ReadWriteOnce", "ReadWriteMany", "ReadOnlyMany"] },
           "size": { "type": "string" },
           "storageClass": { "type": "string" },
