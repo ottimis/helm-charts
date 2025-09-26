@@ -130,7 +130,7 @@ spec:
             {{- range $mountPath := $volume.mountPaths }}
             - name: {{ include "wac.name" $ }}-{{ $volume.name }}
               mountPath: {{ $mountPath.path }}
-              subPath: {{ $mountPath.name }}
+              subPath: {{ $mountPath.subPath | default "" }}
             {{- end }}
             {{- end }}
         # Check if sftp is enabled and volumes is not empty

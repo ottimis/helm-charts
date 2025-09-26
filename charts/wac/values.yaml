@@ -65,6 +65,7 @@ volumes: []
 #    mountPaths:
 #      - name: moduli
 #        path: /var/www/html
+#        subPath: ""
 #    configMap: ""
 #    accessMode: "ReadWriteOnce"
 #    size: "8Gi"
