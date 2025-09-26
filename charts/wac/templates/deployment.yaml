@@ -156,6 +156,9 @@ spec:
           {{- if .configMap }}
           configMap:
             name: {{ .configMap }}
+          {{- else if .secret }}
+          secret:
+            secretName: {{ .secret }}
           {{- else }}
           persistentVolumeClaim:
             claimName: {{ include "wac.name" $ }}-{{ .name }}

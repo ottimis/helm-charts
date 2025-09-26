@@ -67,6 +67,7 @@ volumes: []
 #        path: /var/www/html
 #        subPath: ""
 #    configMap: ""
+#    secret: ""
 #    accessMode: "ReadWriteOnce"
 #    size: "8Gi"
 #    storageClass: "gp3"
