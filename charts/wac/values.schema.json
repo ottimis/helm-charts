@@ -163,7 +163,8 @@
               "type": "object",
               "properties": {
                 "name": { "type": "string" },
-                "path": { "type": "string" }
+                "path": { "type": "string" },
+                "subPath": { "type": "string", "description": "SubPath for mounting a single file from ConfigMap/Secret" }
               },
               "required": ["name", "path"],
               "additionalProperties": false
