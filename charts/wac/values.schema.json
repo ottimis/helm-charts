@@ -25,7 +25,22 @@
       "properties": {
         "type": { "type": "string", "enum": ["ClusterIP", "NodePort", "LoadBalancer"] },
         "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
-        "targetPort": { "type": ["integer", "string" ] }
+        "targetPort": { "type": ["integer", "string" ] },
+        "ports": {
+          "type": "array",
+          "description": "Multiple ports for the service (e.g., HTTP + WebSocket)",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "Port name (e.g., http, ws)" },
+              "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+              "targetPort": { "type": ["integer", "string"] },
+              "protocol": { "type": "string", "enum": ["TCP", "UDP"] }
+            },
+            "required": ["name", "port", "targetPort"],
+            "additionalProperties": false
+          }
+        }
       },
       "additionalProperties": false
     },
@@ -51,10 +66,11 @@
             "type": "object",
             "properties": {
               "path": { "type": "string" },
-              "serviceName": { "type": "string" },
-              "servicePort": { "type": ["integer", "string"] }
+              "pathType": { "type": "string", "enum": ["Prefix", "Exact", "ImplementationSpecific"] },
+              "serviceName": { "type": "string", "description": "Service name (defaults to current service)" },
+              "servicePort": { "type": ["integer", "string"], "description": "Service port number" }
             },
-            "required": ["path", "serviceName"],
+            "required": ["path"],
             "additionalProperties": false
           }
         },
@@ -64,10 +80,11 @@
             "type": "object",
             "properties": {
               "path": { "type": "string" },
-              "serviceName": { "type": "string" },
-              "servicePort": { "type": ["integer", "string"] }
+              "pathType": { "type": "string", "enum": ["Prefix", "Exact", "ImplementationSpecific"] },
+              "serviceName": { "type": "string", "description": "Service name (defaults to current service)" },
+              "servicePort": { "type": ["integer", "string"], "description": "Service port number" }
             },
-            "required": ["path", "serviceName"],
+            "required": ["path"],
             "additionalProperties": false
           }
         }

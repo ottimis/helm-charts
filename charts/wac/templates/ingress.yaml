@@ -31,10 +31,10 @@ spec:
         paths:
           {{- range $.Values.ingress.additionalRoutesBefore }}
           - path: {{ .path | quote }}
-            pathType: Prefix
+            pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                name: {{ .serviceName }}
+                name: {{ .serviceName | default (include "wac.name" $) }}
                 port:
                   number: {{ .servicePort | default 8080 }}
           {{- end }}
@@ -47,10 +47,10 @@ spec:
                   number: {{ $.Values.service.port }}
           {{- range $.Values.ingress.additionalRoutesAfter }}
           - path: {{ .path | quote }}
-            pathType: Prefix
+            pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                name: {{ .serviceName }}
+                name: {{ .serviceName | default (include "wac.name" $) }}
                 port:
                   number: {{ .servicePort | default 8080 }}
           {{- end }}

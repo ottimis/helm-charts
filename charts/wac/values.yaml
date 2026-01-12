@@ -12,6 +12,16 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 8080
+  # Additional ports for multi-port services (e.g., HTTP + WebSocket)
+  # Example for NestJS with HTTP on 3000 and WS on 3001:
+  # ports:
+  #   - name: http
+  #     port: 80
+  #     targetPort: 3000
+  #   - name: ws
+  #     port: 3001
+  #     targetPort: 3001
+  ports: []
 
 ingress:
   enabled: false
