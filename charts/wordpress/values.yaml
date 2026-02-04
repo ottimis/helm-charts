@@ -36,6 +36,7 @@ ingress:
   certificateArn: ""
   customAnnotations: { }
   hosts: [ ]
+  groupName: "frontend-public"
 
 persistence:
   accessMode: ReadWriteOnce
