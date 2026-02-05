@@ -66,16 +66,17 @@ spec:
         {{- end }}
       {{- end }}
 
-      {{/*
-        For the moment we will allow root if sftp needed
-        TODO: Remove this when we have a better solution
-      */}}
-      {{- if and .Values.preventRoot (eq .Values.sftp.enabled false) }}
+      {{- if eq .Values.sftp.enabled false }}
       securityContext:
+        {{- if .Values.preventRoot }}
         fsGroup: {{ .Values.deployment.gid }}
         runAsUser: {{ .Values.deployment.uid }}
         runAsNonRoot: true
         fsGroupChangePolicy: {{ .Values.persistence.fsGroupChangePolicy | default "OnRootMismatch" }}
+        {{- else }}
+        runAsUser: 0
+        runAsNonRoot: false
+        {{- end }}
       {{- end }}
       containers:
         - name: wordpress
@@ -86,13 +87,16 @@ spec:
           ports:
             - containerPort: {{ default 8080 .Values.deployment.port }}
               name: http
-          {{- if .Values.preventRoot }}
           securityContext:
+            {{- if .Values.preventRoot }}
             runAsUser: {{ .Values.deployment.uid }}
             runAsGroup: {{ .Values.deployment.gid }}
             runAsNonRoot: true
             allowPrivilegeEscalation: false
-          {{- end }}
+            {{- else }}
+            runAsUser: 0
+            runAsNonRoot: false
+            {{- end }}
           env:
             - name: WORDPRESS_DB_HOST
               value: {{ .Values.database.host }}
