@@ -14,7 +14,7 @@ resources:
 image:
   repository: ottimis/wordpress
   pullPolicy: IfNotPresent
-  tag: "6.7.0"
+  tag: "6.9.0"
 
 service:
   type: ClusterIP
