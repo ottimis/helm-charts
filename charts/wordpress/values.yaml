@@ -24,6 +24,10 @@ deployment:
   uid: 1000
   gid: 1000
   port: 8080
+  # ConfigMaps to mount as environment variables
+  existingConfigMapsEnv: []
+  # Secrets to mount as environment variables
+  existingSecretsEnv: []
   # key-value pairs to set node affinity
   # Example:
   # nodeAffinity:

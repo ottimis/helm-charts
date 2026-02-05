@@ -57,6 +57,16 @@
         "uid": { "type": "integer", "minimum": 0 },
         "gid": { "type": "integer", "minimum": 0 },
         "port": { "type": "integer", "minimum": 1, "maximum": 65535 },
+        "existingConfigMapsEnv": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of ConfigMap names to mount as environment variables"
+        },
+        "existingSecretsEnv": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "List of Secret names to mount as environment variables"
+        },
         "nodeAffinity": {
           "type": "object",
           "description": "Mappa chiave->valore per node affinity/tolerations",

@@ -134,6 +134,14 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ include "wordpress.name" . }}-salt-keys
+            {{- range .Values.deployment.existingConfigMapsEnv }}
+            - configMapRef:
+                name: {{ . }}
+            {{- end }}
+            {{- range .Values.deployment.existingSecretsEnv }}
+            - secretRef:
+                name: {{ . }}
+            {{- end }}
           volumeMounts:
             - name: wordpress-data
               {{- if eq .Values.persistence.accessMode "ReadWriteOnce" }}
