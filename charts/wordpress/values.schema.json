@@ -149,6 +149,8 @@
       "type": "object",
       "properties": {
         "memoryLimit": { "type": "string" },
+        "configExtraCM": { "type": "string", "description": "ConfigMap name for custom WORDPRESS_CONFIG_EXTRA" },
+        "configExtraKey": { "type": "string", "description": "Key in the ConfigMap (default: config-extra.php)" },
         "customIniCM": { "type": "string" },
         "cacheHost": { "type": "string" },
         "cachePort": { "type": ["string", "integer"] },

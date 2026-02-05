@@ -71,6 +71,10 @@ sftp:
 
 wordpress:
   memoryLimit: 768M
+  # ConfigMap name for custom WORDPRESS_CONFIG_EXTRA (overrides memoryLimit)
+  configExtraCM: ""
+  # Key in the ConfigMap (default: config-extra.php)
+  configExtraKey: ""
   customIniCM: ""
   cacheHost: ""
   cachePort: ""

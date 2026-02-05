@@ -112,10 +112,17 @@ spec:
                   name: {{ .Values.database.existingSecret }}
                   key: password
             - name: WORDPRESS_CONFIG_EXTRA
+              {{- if .Values.wordpress.configExtraCM }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.wordpress.configExtraCM }}
+                  key: {{ .Values.wordpress.configExtraKey | default "config-extra.php" }}
+              {{- else }}
               value: |
                 {{- if .Values.wordpress.memoryLimit }}
                 define('WP_MEMORY_LIMIT', '{{ .Values.wordpress.memoryLimit }}');
                 {{- end }}
+              {{- end }}
             - name: WORDPRESS_URL
               value: {{ include "wordpress.url" . | quote }}
             - name: WORDPRESS_LOCALE
