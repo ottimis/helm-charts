@@ -66,17 +66,16 @@ spec:
         {{- end }}
       {{- end }}
 
-      {{- if eq .Values.sftp.enabled false }}
+      {{- if .Values.preventRoot }}
       securityContext:
-        {{- if .Values.preventRoot }}
         fsGroup: {{ .Values.deployment.gid }}
         runAsUser: {{ .Values.deployment.uid }}
         runAsNonRoot: true
         fsGroupChangePolicy: {{ .Values.persistence.fsGroupChangePolicy | default "OnRootMismatch" }}
-        {{- else }}
-        runAsUser: 0
-        runAsNonRoot: false
-        {{- end }}
+      {{- else if .Values.sftp.enabled }}
+      {{/* SFTP needs root, WordPress container overrides with its own securityContext */}}
+      securityContext:
+        fsGroup: {{ .Values.deployment.gid }}
       {{- end }}
       containers:
         - name: wordpress
@@ -87,16 +86,13 @@ spec:
           ports:
             - containerPort: {{ default 8080 .Values.deployment.port }}
               name: http
+          {{- if .Values.preventRoot }}
           securityContext:
-            {{- if .Values.preventRoot }}
             runAsUser: {{ .Values.deployment.uid }}
             runAsGroup: {{ .Values.deployment.gid }}
             runAsNonRoot: true
             allowPrivilegeEscalation: false
-            {{- else }}
-            runAsUser: 0
-            runAsNonRoot: false
-            {{- end }}
+          {{- end }}
           env:
             - name: WORDPRESS_DB_HOST
               value: {{ .Values.database.host }}
@@ -172,7 +168,10 @@ spec:
             {{- end }}
         {{- if .Values.sftp.enabled }}
         - name: sftp
-          image: atmoz/sftp
+          image: "atmoz/sftp:{{ .Values.sftp.image.tag }}"
+          securityContext:
+            runAsUser: 0
+            runAsNonRoot: false
           volumeMounts:
             {{- range .Values.sftp.users }}
             - name: wordpress-data
@@ -200,8 +199,8 @@ spec:
         {{- end }}
         {{- if .Values.sftp.enabled }}
         - name: sftp-config
-          configMap:
-            name: {{ include "wordpress.name" . }}-sftp
+          secret:
+            secretName: {{ .Values.sftp.existingSecret | default (printf "%s-sftp" (include "wordpress.name" .)) }}
         {{- end }}
         {{- if .Values.wordpress.customHtaccessCM }}
         - name: custom-htaccess

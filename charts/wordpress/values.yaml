@@ -59,6 +59,8 @@ nameOverride: ""
 
 sftp:
   enabled: false
+  # Use an existing Secret for users.conf (overrides users list below)
+  existingSecret: ""
   users:
     - username: "wordpress"
       # Encrypted password is 'password'
