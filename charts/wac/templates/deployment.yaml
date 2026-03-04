@@ -75,6 +75,12 @@ spec:
       {{- if .Values.deployment.serviceAccountName }}
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- range .Values.imagePullSecrets }}
+        - name: {{ . }}
+        {{- end }}
+      {{- end }}
       terminationGracePeriodSeconds: {{ add (default 0 .Values.deployment.gracefulShutdownSeconds) 10 }}
       containers:
         - name: {{ include "wac.name" . }}

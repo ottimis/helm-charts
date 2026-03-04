@@ -4,6 +4,9 @@ updateStrategy: "RollingUpdate"
 nodeSelector: {}
 preventRoot: true
 
+# List of Secret names for pulling images from private registries
+imagePullSecrets: []
+
 image:
   repository: 348705108113.dkr.ecr.eu-central-1.amazonaws.com/ottimis/php:8.3.11-bullseye
   pullPolicy: IfNotPresent

@@ -12,6 +12,11 @@
       "additionalProperties": { "type": "string" }
     },
     "preventRoot": { "type": "boolean" },
+    "imagePullSecrets": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of Secret names for pulling images from private registries"
+    },
     "image": {
       "type": "object",
       "properties": {
