@@ -62,16 +62,15 @@ spec:
         {{- end }}
       {{- end }}
 
-      {{/*
-        For the moment we will allow root if sftp needed
-        TODO: Remove this when we have a better solution
-      */}}
-      {{- if and .Values.preventRoot (eq .Values.sftp.enabled false) }}
       securityContext:
+        {{- if .Values.preventRoot }}
         fsGroup: {{ .Values.deployment.gid }}
         runAsUser: {{ .Values.deployment.uid }}
         runAsNonRoot: true
-      {{- end }}
+        {{- else }}
+        runAsUser: 0
+        runAsNonRoot: false
+        {{- end }}
       {{- if .Values.deployment.serviceAccountName }}
       serviceAccountName: {{ .Values.deployment.serviceAccountName }}
       {{- end }}
@@ -98,13 +97,16 @@ spec:
             - containerPort: {{ .Values.service.targetPort }}
               name: http
             {{- end }}
-          {{- if .Values.preventRoot }}
           securityContext:
+            {{- if .Values.preventRoot }}
             runAsUser: {{ .Values.deployment.uid }}
             runAsGroup: {{ .Values.deployment.gid }}
             runAsNonRoot: true
             allowPrivilegeEscalation: false
-          {{- end }}
+            {{- else }}
+            runAsUser: 0
+            runAsNonRoot: false
+            {{- end }}
           {{- $gs := int (default 0 .Values.deployment.gracefulShutdownSeconds) }}
           {{- if gt $gs 0 }}
           lifecycle:
