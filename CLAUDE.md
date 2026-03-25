@@ -14,8 +14,8 @@ charts/
 
 ## Chart: WAC (Web Application Component)
 
-**Versione:** 1.1.2
-**App Version:** 1.0.0
+**Versione:** 1.4.0
+**App Version:** 1.1.1
 **Maintainer:** MM <mm@ottimis.com>
 
 ### Descrizione
@@ -61,6 +61,7 @@ Chart Helm generico per il deployment di applicazioni web (PHP, Node.js, NestJS,
 | Deployment | `templates/deployment.yaml` | Sempre |
 | Service | `templates/service.yaml` | Sempre |
 | Ingress | `templates/ingress.yaml` | `ingress.enabled: true` |
+| CronJob | `templates/cronjob.yaml` | Per ogni entry in `cronjobs[]` |
 | PersistentVolumeClaim | `templates/pvc.yaml` | Per ogni volume senza configMap/secret |
 | ConfigMap (SFTP) | `templates/sftp-configmap.yaml` | `sftp.enabled: true` |
 | Service (SFTP) | `templates/sftp-service.yaml` | `sftp.enabled: true` |
@@ -178,6 +179,34 @@ volumes:
     secret: "firebase-config"     # Nome Secret esistente
 ```
 
+#### CronJob
+
+Job schedulati che riutilizzano la stessa immagine e configurazione del deployment:
+
+```yaml
+cronjobs:
+  - name: "cleanup"
+    schedule: "0 2 * * *"                # Cron expression
+    command: ["php", "/var/www/html/scripts/cleanup.php"]
+    # Opzionali:
+    # args: []                           # Argomenti aggiuntivi
+    # image: ""                          # Override immagine (default: image.repository)
+    # resources: {}                      # Override risorse (default: deployment.resources)
+    # env: {}                            # Env aggiuntive (merge con deployment.env)
+    # concurrencyPolicy: "Forbid"        # Allow, Forbid, Replace
+    # successfulJobsHistoryLimit: 1
+    # failedJobsHistoryLimit: 3
+    # restartPolicy: "OnFailure"         # OnFailure, Never
+    # suspend: false                     # Sospendi il cronjob
+    # volumes: ["data"]                  # Nomi dei volumi principali da montare
+```
+
+**Caratteristiche:**
+- Eredita automaticamente `env`, `existingConfigMapsEnv`, `existingSecretsEnv` dal deployment
+- `env` del cronjob viene **aggiunto** (non sostituisce) alle env del deployment
+- Rispetta `preventRoot`, `imagePullSecrets`, `serviceAccountName`, `nodeAffinity`
+- I volumi sono selettivi: specifica solo i nomi dei volumi principali da montare
+
 #### SFTP
 
 Container sidecar per accesso SFTP ai volumi:
@@ -197,13 +226,14 @@ sftp:
 ### Features Principali
 
 1. **Multi-Port Service**: Supporto per servizi con porte multiple (HTTP + WebSocket, gRPC, etc.)
-2. **Security Context**: Esecuzione non-root configurabile, security context per pod e container
-3. **Node Affinity/Tolerations**: Scheduling avanzato tramite `deployment.nodeAffinity`
-4. **Pod Anti-Affinity**: Distribuzione automatica su nodi diversi per HA
-5. **Graceful Shutdown**: Configurabile con preStop hook
-6. **Volumi Flessibili**: Supporto PVC, ConfigMap e Secret con mount multipli e subPath
-7. **SFTP Sidecar**: Accesso file via SFTP con utenti configurabili
-8. **ALB Integration**: Annotazioni native per AWS ALB Ingress Controller
+2. **CronJob**: Job schedulati con ereditarietà configurazione dal deployment
+3. **Security Context**: Esecuzione non-root configurabile, security context per pod e container
+4. **Node Affinity/Tolerations**: Scheduling avanzato tramite `deployment.nodeAffinity`
+5. **Pod Anti-Affinity**: Distribuzione automatica su nodi diversi per HA
+6. **Graceful Shutdown**: Configurabile con preStop hook
+7. **Volumi Flessibili**: Supporto PVC, ConfigMap e Secret con mount multipli e subPath
+8. **SFTP Sidecar**: Accesso file via SFTP con utenti configurabili
+9. **ALB Integration**: Annotazioni native per AWS ALB Ingress Controller
 9. **Resource Policy**: PVC mantenuti alla cancellazione del chart (`helm.sh/resource-policy: keep`)
 
 ---

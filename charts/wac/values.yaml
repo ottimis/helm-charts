@@ -73,6 +73,22 @@ deployment:
   nodeAffinity: {}
   preventSameNode: true
 
+cronjobs: []
+#  - name: "cleanup"
+#    schedule: "0 2 * * *"
+#    command: ["php", "/var/www/html/scripts/cleanup.php"]
+#    # Optional:
+#    # args: []
+#    # image: ""                      # Uses main image if empty
+#    # resources: {}                  # Uses deployment.resources if empty
+#    # env: {}                        # Additional env vars (merged with deployment.env)
+#    # concurrencyPolicy: "Forbid"    # Allow, Forbid, Replace
+#    # successfulJobsHistoryLimit: 1
+#    # failedJobsHistoryLimit: 3
+#    # restartPolicy: "OnFailure"     # OnFailure, Never
+#    # suspend: false
+#    # volumes: ["data"]              # List of volume names from main volumes to mount
+
 volumes: []
 #  - name: ""
 #    mountPaths:

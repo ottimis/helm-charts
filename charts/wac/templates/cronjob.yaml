@@ -1,0 +1,137 @@
+{{- range $job := .Values.cronjobs }}
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "wac.name" $ }}-{{ $job.name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ include "wac.name" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/component: cronjob-{{ $job.name }}
+spec:
+  schedule: {{ $job.schedule | quote }}
+  concurrencyPolicy: {{ $job.concurrencyPolicy | default "Forbid" }}
+  successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit | default 1 }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit | default 3 }}
+  {{- if $job.suspend }}
+  suspend: {{ $job.suspend }}
+  {{- end }}
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: {{ include "wac.name" $ }}
+            app.kubernetes.io/instance: {{ $.Release.Name }}
+            app.kubernetes.io/component: cronjob-{{ $job.name }}
+        spec:
+          securityContext:
+            {{- if $.Values.preventRoot }}
+            fsGroup: {{ $.Values.deployment.gid }}
+            runAsUser: {{ $.Values.deployment.uid }}
+            runAsNonRoot: true
+            {{- else }}
+            runAsUser: 0
+            runAsNonRoot: false
+            {{- end }}
+          {{- if $.Values.deployment.serviceAccountName }}
+          serviceAccountName: {{ $.Values.deployment.serviceAccountName }}
+          {{- end }}
+          {{- if $.Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- range $.Values.imagePullSecrets }}
+            - name: {{ . }}
+            {{- end }}
+          {{- end }}
+          restartPolicy: {{ $job.restartPolicy | default "OnFailure" }}
+          containers:
+            - name: {{ $job.name }}
+              image: "{{ $job.image | default $.Values.image.repository }}"
+              imagePullPolicy: {{ $.Values.image.pullPolicy }}
+              {{- if $job.command }}
+              command:
+                {{- toYaml $job.command | nindent 16 }}
+              {{- end }}
+              {{- if $job.args }}
+              args:
+                {{- toYaml $job.args | nindent 16 }}
+              {{- end }}
+              resources:
+                {{- toYaml ($job.resources | default $.Values.deployment.resources) | nindent 16 }}
+              securityContext:
+                {{- if $.Values.preventRoot }}
+                runAsUser: {{ $.Values.deployment.uid }}
+                runAsGroup: {{ $.Values.deployment.gid }}
+                runAsNonRoot: true
+                allowPrivilegeEscalation: false
+                {{- else }}
+                runAsUser: 0
+                runAsNonRoot: false
+                {{- end }}
+              {{- if or $.Values.deployment.env $job.env }}
+              env:
+                {{- range $key, $value := $.Values.deployment.env }}
+                - name: {{ $key }}
+                  value: {{ $value | quote }}
+                {{- end }}
+                {{- range $key, $value := $job.env }}
+                - name: {{ $key }}
+                  value: {{ $value | quote }}
+                {{- end }}
+              {{- end }}
+              envFrom:
+                {{- range $.Values.deployment.existingConfigMapsEnv }}
+                - configMapRef:
+                    name: {{ . }}
+                {{- end }}
+                {{- range $.Values.deployment.existingSecretsEnv }}
+                - secretRef:
+                    name: {{ . }}
+                {{- end }}
+              {{- if $job.volumes }}
+              volumeMounts:
+                {{- range $volName := $job.volumes }}
+                {{- range $volume := $.Values.volumes }}
+                {{- if eq $volume.name $volName }}
+                {{- range $mountPath := $volume.mountPaths }}
+                - name: {{ include "wac.name" $ }}-{{ $volume.name }}
+                  mountPath: {{ $mountPath.path }}
+                  subPath: {{ $mountPath.subPath | default "" }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
+              {{- end }}
+          {{- if $job.volumes }}
+          volumes:
+            {{- range $volName := $job.volumes }}
+            {{- range $volume := $.Values.volumes }}
+            {{- if eq $volume.name $volName }}
+            - name: {{ include "wac.name" $ }}-{{ $volume.name }}
+              {{- if $volume.configMap }}
+              configMap:
+                name: {{ $volume.configMap }}
+              {{- else if $volume.secret }}
+              secret:
+                secretName: {{ $volume.secret }}
+              {{- else }}
+              persistentVolumeClaim:
+                claimName: {{ include "wac.name" $ }}-{{ $volume.name }}
+              {{- end }}
+            {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- $hasNodeAff := not (empty $.Values.deployment.nodeAffinity) }}
+          {{- if $hasNodeAff }}
+          tolerations:
+            {{- range $key, $value := $.Values.deployment.nodeAffinity }}
+            - key: {{ $key | quote }}
+              operator: "Equal"
+              value: {{ $value | quote }}
+              effect: "NoSchedule"
+            {{- end }}
+          nodeSelector:
+            {{- toYaml $.Values.nodeSelector | nindent 12 }}
+          {{- end }}
+{{- end }}
