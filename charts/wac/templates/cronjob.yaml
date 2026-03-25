@@ -122,6 +122,7 @@ spec:
             {{- end }}
             {{- end }}
           {{- end }}
+          {{- end }}
           {{- $hasNodeAff := not (empty $.Values.deployment.nodeAffinity) }}
           {{- if $hasNodeAff }}
           tolerations:
