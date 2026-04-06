@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.6.0] - 2026-04-06
+
+### Added
+- Supporto 1Password Secrets tramite `onePasswordSecrets[]`
+  - Crea risorse `OnePasswordItem` che il 1Password Operator sincronizza come Secret Kubernetes
+  - Iniettati automaticamente come env vars nel deployment e nei cronjob
+  - Configurabile: `vault` (default: `eks`), `autoRestart` (default: `true`)
+
+## [1.5.0] - 2026-04-06
+
+### Changed
+- `preventRoot: false` ora forza esplicitamente `runAsUser: 0` a livello pod e container (prima non applicava securityContext)
+
 ## [1.4.0] - 2026-03-25
 
 ### Added

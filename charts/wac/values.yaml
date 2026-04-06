@@ -52,6 +52,12 @@ sftp:
     tag: "latest"
 
 deployment:
+  # Override container command and args (useful for multi-entrypoint images)
+  # Example:
+  #   command: ["python", "-m", "src.worker"]
+  #   args: ["--verbose"]
+  command: []
+  args: []
   customHtaccessCM: ""
   existingSecretsEnv: []
   existingConfigMapsEnv: []
@@ -72,6 +78,12 @@ deployment:
     #   disktype: ssd
   nodeAffinity: {}
   preventSameNode: true
+
+onePasswordSecrets: []
+#  - name: "my-secret"            # Nome della risorsa OnePasswordItem e del Secret risultante
+#    item: "item-name"            # Nome dell'item nella cassaforte 1Password
+#    vault: "eks"                 # Nome della cassaforte (default: eks)
+#    autoRestart: true            # Restart automatico pod quando il secret cambia (default: true)
 
 cronjobs: []
 #  - name: "cleanup"

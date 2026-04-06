@@ -85,6 +85,14 @@ spec:
         - name: {{ include "wac.name" . }}
           image: "{{ .Values.image.repository }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.deployment.command }}
+          command:
+            {{- toYaml .Values.deployment.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.deployment.args }}
+          args:
+            {{- toYaml .Values.deployment.args | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.deployment.resources | nindent 12 }}
           ports:
@@ -129,6 +137,10 @@ spec:
             {{- range .Values.deployment.existingSecretsEnv }}
             - secretRef:
                 name: {{ . }}
+            {{- end}}
+            {{- range .Values.onePasswordSecrets }}
+            - secretRef:
+                name: {{ .name }}
             {{- end}}
           volumeMounts:
             {{- if .Values.deployment.customIniCM }}

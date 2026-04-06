@@ -89,6 +89,10 @@ spec:
                 - secretRef:
                     name: {{ . }}
                 {{- end }}
+                {{- range $.Values.onePasswordSecrets }}
+                - secretRef:
+                    name: {{ .name }}
+                {{- end }}
               {{- if $job.volumes }}
               volumeMounts:
                 {{- range $volName := $job.volumes }}

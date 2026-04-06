@@ -127,6 +127,16 @@
     "deployment": {
       "type": "object",
       "properties": {
+        "command": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Override container command"
+        },
+        "args": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Override container args"
+        },
         "customHtaccessCM": { "type": "string" },
         "existingSecretsEnv": {
           "type": "array",
@@ -155,6 +165,21 @@
         "preventSameNode": { "type": "boolean" }
       },
       "additionalProperties": false
+    },
+    "onePasswordSecrets": {
+      "type": "array",
+      "description": "List of 1Password items to sync as Kubernetes Secrets",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "description": "Name of the OnePasswordItem and resulting Secret" },
+          "item": { "type": "string", "description": "Item name in the 1Password vault" },
+          "vault": { "type": "string", "description": "Vault name (default: eks)" },
+          "autoRestart": { "type": "boolean", "description": "Auto-restart pods when secret changes (default: true)" }
+        },
+        "required": ["name", "item"],
+        "additionalProperties": false
+      }
     },
     "cronjobs": {
       "type": "array",
