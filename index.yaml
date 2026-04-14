@@ -8,7 +8,27 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-04-06T20:30:07.939989194Z"
+    created: "2026-04-14T08:14:23.617943231Z"
+    description: A Helm chart for OG Web Application Component
+    digest: 423f01dcdbe4bbd5b6efc82a6ea4d246e0ee5b5514edf1b7a124dd8fca8b03e7
+    home: https://ottimis.com
+    icon: https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png
+    maintainers:
+    - email: mm@ottimis.com
+      name: MM
+    name: wac
+    type: application
+    urls:
+    - https://charts.otm.ai/wac-1.7.0.tgz
+    version: 1.7.0
+  - annotations:
+      artifacthub.io/images: |
+        - "https://ottimis.com/wp-content/uploads/2020/04/ottimis-fav-icon.png"
+      category: Web Application Component
+      tags: web, server, component
+    apiVersion: v2
+    appVersion: 1.1.1
+    created: "2026-04-14T08:14:23.617483349Z"
     description: A Helm chart for OG Web Application Component
     digest: a882945ac662542afa8d83e5551995aa088ebac7982b6d910c3ebd8daeaf4e3f
     home: https://ottimis.com
@@ -28,7 +48,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-04-06T20:30:07.939499437Z"
+    created: "2026-04-14T08:14:23.617026103Z"
     description: A Helm chart for OG Web Application Component
     digest: 335c0dff76909b372f67e9ed10d23965eb0a4aa8d67df11afd44e03f2274bded
     home: https://ottimis.com
@@ -48,7 +68,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-04-06T20:30:07.939064702Z"
+    created: "2026-04-14T08:14:23.616574086Z"
     description: A Helm chart for OG Web Application Component
     digest: 0827b069f253af5625f27de96fd79105e691b921b0effaa22a4ecd2afad0cdbf
     home: https://ottimis.com
@@ -68,7 +88,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-04-06T20:30:07.938639556Z"
+    created: "2026-04-14T08:14:23.616145984Z"
     description: A Helm chart for OG Web Application Component
     digest: 954315b5ae25852983183cd0869084a07a75211b744da558834261d8f603aa19
     home: https://ottimis.com
@@ -88,7 +108,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-04-06T20:30:07.938250243Z"
+    created: "2026-04-14T08:14:23.615728081Z"
     description: A Helm chart for OG Web Application Component
     digest: 381274a96adb933e15172816e19ed710a88d89370cface9af6eee259fca40d88
     home: https://ottimis.com
@@ -108,7 +128,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.1
-    created: "2026-04-06T20:30:07.937852066Z"
+    created: "2026-04-14T08:14:23.615249665Z"
     description: A Helm chart for OG Web Application Component
     digest: 7ab0a6c96f8f3bf81d927d5b56ad8596fd4ead237eb30e120efc38a3286d071b
     home: https://ottimis.com
@@ -128,7 +148,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.1.0
-    created: "2026-04-06T20:30:07.937465846Z"
+    created: "2026-04-14T08:14:23.614566174Z"
     description: A Helm chart for OG Web Application Component
     digest: 568e59c90e2071f02f555f0aaf31a1725b5c03f1bc313f4b54730489533c0f48
     home: https://ottimis.com
@@ -148,7 +168,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-06T20:30:07.937067961Z"
+    created: "2026-04-14T08:14:23.613520376Z"
     description: A Helm chart for OG Web Application Component
     digest: d9e380f3c315b4e1a6f41f4bcbf358522bdae8f07eecf08813f0f1656c18bdec
     home: https://ottimis.com
@@ -168,7 +188,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-06T20:30:07.936692768Z"
+    created: "2026-04-14T08:14:23.61315944Z"
     description: A Helm chart for OG Web Application Component
     digest: 909ecfad86ad7f6d5ad84bffcd8080d0227228ff151ba2e372e576ccce193c32
     home: https://ottimis.com
@@ -188,7 +208,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-06T20:30:07.936243875Z"
+    created: "2026-04-14T08:14:23.612749532Z"
     description: A Helm chart for OG Web Application Component
     digest: e021e3ed1151a6dda9987a6b3a95aabda2db8907f6003e3d10ad3cf6755a775c
     home: https://ottimis.com
@@ -208,7 +228,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-04-06T20:30:07.935635865Z"
+    created: "2026-04-14T08:14:23.612344904Z"
     description: A Helm chart for OG Web Application Component
     digest: 29b383cd80eb2609f86a3ef92833a4c530babc038e48d04a465b13c7a72b31b5
     home: https://ottimis.com
@@ -228,7 +248,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.934503982Z"
+    created: "2026-04-14T08:14:23.611913666Z"
     description: A Helm chart for OG Web Application Component
     digest: 0288de3035c483c042e9058c9e1da30de6b50afe39ee417766975e7e22f978aa
     home: https://ottimis.com
@@ -248,7 +268,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.934175112Z"
+    created: "2026-04-14T08:14:23.611557308Z"
     description: A Helm chart for OG Web Application Component
     digest: c807ac841bfde532a6125ec8258591ae6446cde964c2d7e540ab3ad58e191c71
     home: https://ottimis.com
@@ -268,7 +288,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.933856416Z"
+    created: "2026-04-14T08:14:23.611207252Z"
     description: A Helm chart for OG Web Application Component
     digest: 627e78f4c1559dc0cb1a084b2a3818786b986ae04af35a43261a196fec89b412
     home: https://ottimis.com
@@ -288,7 +308,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.933480747Z"
+    created: "2026-04-14T08:14:23.6108485Z"
     description: A Helm chart for OG Web Application Component
     digest: 4c4cdd5eab11eb3d04672947ae06958f1caf5f4efaa1b3c6f19ea901eb6499ef
     home: https://ottimis.com
@@ -308,7 +328,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.933157687Z"
+    created: "2026-04-14T08:14:23.610508523Z"
     description: A Helm chart for OG Web Application Component
     digest: 7482158d5c73fb82060f71d67a9bd2604ca92e0d12ccd273d7eefa845bfef755
     home: https://ottimis.com
@@ -328,7 +348,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.932858789Z"
+    created: "2026-04-14T08:14:23.610159941Z"
     description: A Helm chart for OG Web Application Component
     digest: dd98598ccb21c1872e514269e7a44c9fe5baaf838649f2fc9f53d3998cf7c941
     home: https://ottimis.com
@@ -348,7 +368,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.932508595Z"
+    created: "2026-04-14T08:14:23.609778947Z"
     description: A Helm chart for OG Web Application Component
     digest: d7148cfe00371f61d1a4f57be24cb1f85a1adf1fa1dde8e16362e5c26e01f705
     home: https://ottimis.com
@@ -368,7 +388,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.2
-    created: "2026-04-06T20:30:07.932228631Z"
+    created: "2026-04-14T08:14:23.609432888Z"
     description: A Helm chart for OG Web Application Component
     digest: 8cc0ff30920615a379087fa20150d4b73282fc170f0b8b14d135f1696b573e07
     home: https://ottimis.com
@@ -388,7 +408,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-06T20:30:07.931919712Z"
+    created: "2026-04-14T08:14:23.609084025Z"
     description: A Helm chart for OG Web Application Component
     digest: 7c0770f118a02ab84abb12a602ea039eb5dd34c3e62f8af525cb57da121b5b91
     home: https://ottimis.com
@@ -408,7 +428,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-06T20:30:07.931607247Z"
+    created: "2026-04-14T08:14:23.608684156Z"
     description: A Helm chart for OG Web Application Component
     digest: 46e88489b5497fa3235dcb2bbb74d837f4d71a970c12f4c44e2b859d76296a8c
     home: https://ottimis.com
@@ -428,7 +448,7 @@ entries:
       tags: web, server, component
     apiVersion: v2
     appVersion: 0.0.1
-    created: "2026-04-06T20:30:07.931236269Z"
+    created: "2026-04-14T08:14:23.60805242Z"
     description: A Helm chart for OG Web Application Component
     digest: 97bb1acecd050f03ac3a40cf158d9ee0b0808c4f8fdd3e9dc93484a2586c6d4e
     home: https://ottimis.com
@@ -449,9 +469,9 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.9.0
-    created: "2026-04-06T20:30:07.950753665Z"
+    created: "2026-04-14T08:14:23.628788341Z"
     description: A Helm chart for wordpress in Kubernetes
-    digest: 1a180aec46eae25eb6a37593efdb6452ebe41e6f020f373cfc2ea1c3b2ae002d
+    digest: e1bc8312a2764e34994bea2832df9332cd0a3d6a89d9ac8109c5a332e6da896b
     home: https://ottimis.com
     icon: https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/WordPress_blue_logo.svg/512px-WordPress_blue_logo.svg.png
     maintainers:
@@ -469,7 +489,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.9.0
-    created: "2026-04-06T20:30:07.950274328Z"
+    created: "2026-04-14T08:14:23.628289096Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: e85dc55472cc190870245baf8a7afc592b037142f5c0fc79bccfc20ae7466d6c
     home: https://ottimis.com
@@ -489,7 +509,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.94983267Z"
+    created: "2026-04-14T08:14:23.627369209Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 8d054b3799098aedeac4a9b5464ae3bdaf2144714d6d62e334e01309cfd44fb7
     home: https://ottimis.com
@@ -509,7 +529,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.949335924Z"
+    created: "2026-04-14T08:14:23.626527433Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 0f159bd6c33769fca04caa5bb3146946f5efecc61bb3484289b40c10a88e5ae5
     home: https://ottimis.com
@@ -529,7 +549,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.948843754Z"
+    created: "2026-04-14T08:14:23.626065447Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 41d5f26b7de60ace2843ded093449b86507c3fac4d15bfe36f755773e965baa7
     home: https://ottimis.com
@@ -549,7 +569,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.947483473Z"
+    created: "2026-04-14T08:14:23.625579497Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: b0e664471bc3525b8f0c9fc43398bfc06586994f27b886669b43c0ebd2d51314
     home: https://ottimis.com
@@ -569,7 +589,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.947058159Z"
+    created: "2026-04-14T08:14:23.625098606Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 91e33f60cd9146e10061f040c8383b85c36bdaa99096376aab7f255fed93cd41
     home: https://ottimis.com
@@ -589,7 +609,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.946609619Z"
+    created: "2026-04-14T08:14:23.624618366Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 6459ec24e0c85202e7fcdec884870d2fae63659f0be6066b41c9ae0bff38a745
     home: https://ottimis.com
@@ -609,7 +629,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.946162778Z"
+    created: "2026-04-14T08:14:23.6241774Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 3b1393d7346f85ee9cae567b4c8b18389aeab0777bf15d08f628c75a926251c9
     home: https://ottimis.com
@@ -629,7 +649,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.94570884Z"
+    created: "2026-04-14T08:14:23.623713822Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: d1578af898da201bebc5b0616db45185fc669098697d6a8b6434d0294f5a9ed8
     home: https://ottimis.com
@@ -649,7 +669,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.945269109Z"
+    created: "2026-04-14T08:14:23.62330717Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: b252e98f82977677183816cc8090a80acf6a87365b77188d113f7b83843532f4
     home: https://ottimis.com
@@ -669,7 +689,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.944874882Z"
+    created: "2026-04-14T08:14:23.622835907Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 06abaca9ba0937da6ca22d1ad90ac90b10c7a02d0dc342e537316561071388ee
     home: https://ottimis.com
@@ -689,7 +709,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.944448983Z"
+    created: "2026-04-14T08:14:23.622401654Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 56c099eb05cf9a04c312abe0586333ade493688798b2ca27fbc3f06644a5d1fc
     home: https://ottimis.com
@@ -709,7 +729,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.944056565Z"
+    created: "2026-04-14T08:14:23.621952622Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 8abfc845b6eec93e3cfd63cb191ee1c09ed8f5b3ffef54eeac241a2851ccd81b
     home: https://ottimis.com
@@ -729,7 +749,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.943672001Z"
+    created: "2026-04-14T08:14:23.62153518Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: d82eddf114004f00dce05ad0214cc9ad9fa4d526eb633a0980a4a056e5e23b89
     home: https://ottimis.com
@@ -749,7 +769,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.943283651Z"
+    created: "2026-04-14T08:14:23.620675219Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 9d47cc8394b2a1258574b90bd5a44a018406c0030fe76b5ee48424416c81faa5
     home: https://ottimis.com
@@ -769,7 +789,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.7.0
-    created: "2026-04-06T20:30:07.942892583Z"
+    created: "2026-04-14T08:14:23.619920575Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 75076e112d875ff29763cba1437a6281c2967810559c5e2b8b077036d13e1670
     home: https://ottimis.com
@@ -789,7 +809,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2026-04-06T20:30:07.942405276Z"
+    created: "2026-04-14T08:14:23.619495298Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 321a11b9450d0afbf592f56098a797dfa1a4c014d0aded56bf05007a8d9c9285
     home: https://ottimis.com
@@ -809,7 +829,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2026-04-06T20:30:07.941074015Z"
+    created: "2026-04-14T08:14:23.619121268Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 8d4f0304e7470ab1b8e8c386a842190cdbb3507ea96c9b2e2ed43ad8190939ee
     home: https://ottimis.com
@@ -829,7 +849,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2026-04-06T20:30:07.940716757Z"
+    created: "2026-04-14T08:14:23.618726308Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: fe2cfb7d33f9dae96449900f3aa0e98b96b650ca4e54db0fd0484861afe5d89a
     home: https://ottimis.com
@@ -849,7 +869,7 @@ entries:
       tags: wordpress, cms, blog
     apiVersion: v2
     appVersion: 6.6.1
-    created: "2026-04-06T20:30:07.940340895Z"
+    created: "2026-04-14T08:14:23.618352087Z"
     description: A Helm chart for wordpress in Kubernetes
     digest: 7161f4317261648d625f39e10d5a2152f9d1e4ebf15549be7723b3073561649b
     home: https://ottimis.com
@@ -862,4 +882,4 @@ entries:
     urls:
     - https://charts.otm.ai/wordpress-0.0.18.tgz
     version: 0.0.18
-generated: "2026-04-06T20:30:07.930771006Z"
+generated: "2026-04-14T08:14:23.607083625Z"
