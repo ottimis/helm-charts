@@ -160,6 +160,15 @@ spec:
               subPath: {{ $mountPath.subPath | default "" }}
             {{- end }}
             {{- end }}
+            {{- range $secret := .Values.onePasswordSecrets }}
+            {{- if $secret.mountPaths }}
+            {{- range $mountPath := $secret.mountPaths }}
+            - name: op-{{ $secret.name }}
+              mountPath: {{ $mountPath.path }}
+              subPath: {{ $mountPath.subPath | default "" }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
         # Check if sftp is enabled and volumes is not empty
         {{- if and .Values.sftp.enabled (not (empty .Values.volumes)) }}
         - name: sftp
@@ -192,6 +201,13 @@ spec:
           {{- end }}
         {{- end }}
 
+        {{- range .Values.onePasswordSecrets }}
+        {{- if .mountPaths }}
+        - name: op-{{ .name }}
+          secret:
+            secretName: {{ .name }}
+        {{- end }}
+        {{- end }}
         {{- if .Values.deployment.customIniCM }}
         - name: custom-ini
           configMap:

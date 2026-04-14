@@ -175,7 +175,21 @@
           "name": { "type": "string", "description": "Name of the OnePasswordItem and resulting Secret" },
           "item": { "type": "string", "description": "Item name in the 1Password vault" },
           "vault": { "type": "string", "description": "Vault name (default: eks)" },
-          "autoRestart": { "type": "boolean", "description": "Auto-restart pods when secret changes (default: true)" }
+          "autoRestart": { "type": "boolean", "description": "Auto-restart pods when secret changes (default: true)" },
+          "mountPaths": {
+            "type": "array",
+            "description": "Mount the secret as volume files",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": { "type": "string" },
+                "path": { "type": "string" },
+                "subPath": { "type": "string" }
+              },
+              "required": ["name", "path"],
+              "additionalProperties": false
+            }
+          }
         },
         "required": ["name", "item"],
         "additionalProperties": false

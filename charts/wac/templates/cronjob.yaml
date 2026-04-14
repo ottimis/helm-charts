@@ -93,7 +93,7 @@ spec:
                 - secretRef:
                     name: {{ .name }}
                 {{- end }}
-              {{- if $job.volumes }}
+              {{- if or $job.volumes (gt (len $.Values.onePasswordSecrets) 0) }}
               volumeMounts:
                 {{- range $volName := $job.volumes }}
                 {{- range $volume := $.Values.volumes }}
@@ -106,8 +106,17 @@ spec:
                 {{- end }}
                 {{- end }}
                 {{- end }}
+                {{- range $secret := $.Values.onePasswordSecrets }}
+                {{- if $secret.mountPaths }}
+                {{- range $mountPath := $secret.mountPaths }}
+                - name: op-{{ $secret.name }}
+                  mountPath: {{ $mountPath.path }}
+                  subPath: {{ $mountPath.subPath | default "" }}
+                {{- end }}
+                {{- end }}
+                {{- end }}
               {{- end }}
-          {{- if $job.volumes }}
+          {{- if or $job.volumes (gt (len $.Values.onePasswordSecrets) 0) }}
           volumes:
             {{- range $volName := $job.volumes }}
             {{- range $volume := $.Values.volumes }}
@@ -125,7 +134,14 @@ spec:
               {{- end }}
             {{- end }}
             {{- end }}
-          {{- end }}
+            {{- end }}
+            {{- range $.Values.onePasswordSecrets }}
+            {{- if .mountPaths }}
+            - name: op-{{ .name }}
+              secret:
+                secretName: {{ .name }}
+            {{- end }}
+            {{- end }}
           {{- end }}
           {{- $hasNodeAff := not (empty $.Values.deployment.nodeAffinity) }}
           {{- if $hasNodeAff }}

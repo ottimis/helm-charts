@@ -84,6 +84,11 @@ onePasswordSecrets: []
 #    item: "item-name"            # Nome dell'item nella cassaforte 1Password
 #    vault: "eks"                 # Nome della cassaforte (default: eks)
 #    autoRestart: true            # Restart automatico pod quando il secret cambia (default: true)
+#    # Opzionale: montare il secret come volume
+#    # mountPaths:
+#    #   - name: config
+#    #     path: /app/config.json
+#    #     subPath: config.json
 
 cronjobs: []
 #  - name: "cleanup"

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0] - 2026-04-14
+
+### Added
+- Supporto `mountPaths` per `onePasswordSecrets[]`: possibilità di montare un 1Password Secret come volume (file) oltre che come env vars
+  - Stessa sintassi dei volumi principali: `path` e `subPath`
+  - Supportato sia nel deployment che nei cronjob
+
 ## [1.6.0] - 2026-04-06
 
 ### Added
