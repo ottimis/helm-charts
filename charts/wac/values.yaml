@@ -119,3 +119,36 @@ volumes: []
 #    storageClass: "gp3"
 #    # Need sftp.enabled: true to use this
 #    sftpAccess: false
+
+# Raw pod volumes rendered verbatim onto the Deployment. Use for volume sources
+# not covered by `volumes` above (projected, csi, emptyDir, downwardAPI, ...).
+# Each entry is a standard Kubernetes volume spec. Pair with `extraVolumeMounts`.
+# Example — GCP Workload Identity Federation (EKS -> GCP, ADC without long-lived keys):
+#   extraVolumes:
+#     - name: google-wif-token
+#       projected:
+#         defaultMode: 0444
+#         sources:
+#           - serviceAccountToken:
+#               audience: https://iam.googleapis.com/projects/PROJECT_NUMBER/locations/global/workloadIdentityPools/POOL/providers/PROVIDER
+#               expirationSeconds: 3600
+#               path: token
+#     - name: google-wif-config
+#       configMap:
+#         name: gcp-wif
+#         items:
+#           - key: credential-configuration.json
+#             path: credential-configuration.json
+extraVolumes: []
+
+# Raw container volumeMounts rendered verbatim onto the main container.
+# Each entry is a standard Kubernetes volumeMount spec; `name` must match an
+# `extraVolumes` entry. Example (pairs with the WIF volumes above):
+#   extraVolumeMounts:
+#     - name: google-wif-token
+#       mountPath: /var/run/google-wif
+#       readOnly: true
+#     - name: google-wif-config
+#       mountPath: /etc/google-wif
+#       readOnly: true
+extraVolumeMounts: []

@@ -248,6 +248,33 @@
         "required": ["name", "mountPaths"],
         "additionalProperties": false
       }
+    },
+    "extraVolumes": {
+      "type": "array",
+      "description": "Raw pod volume specs rendered verbatim onto the Deployment (projected, csi, emptyDir, ...). Pair with extraVolumeMounts.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" }
+        },
+        "required": ["name"],
+        "additionalProperties": true
+      }
+    },
+    "extraVolumeMounts": {
+      "type": "array",
+      "description": "Raw container volumeMount specs rendered verbatim onto the main container. name must match an extraVolumes entry.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "mountPath": { "type": "string" },
+          "readOnly": { "type": "boolean" },
+          "subPath": { "type": "string" }
+        },
+        "required": ["name", "mountPath"],
+        "additionalProperties": true
+      }
     }
   }
 }
