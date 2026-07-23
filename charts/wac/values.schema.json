@@ -211,6 +211,9 @@
           "concurrencyPolicy": { "type": "string", "enum": ["Allow", "Forbid", "Replace"] },
           "successfulJobsHistoryLimit": { "type": "integer", "minimum": 0 },
           "failedJobsHistoryLimit": { "type": "integer", "minimum": 0 },
+          "startingDeadlineSeconds": { "type": "integer", "minimum": 0, "description": "Deadline in seconds for starting the job if it misses its scheduled time" },
+          "activeDeadlineSeconds": { "type": "integer", "minimum": 1, "description": "Max duration in seconds the job may run before it is terminated" },
+          "backoffLimit": { "type": "integer", "minimum": 0, "description": "Number of retries before marking the job failed" },
           "restartPolicy": { "type": "string", "enum": ["OnFailure", "Never"] },
           "suspend": { "type": "boolean" },
           "volumes": { "type": "array", "items": { "type": "string" }, "description": "Volume names from main volumes to mount" }

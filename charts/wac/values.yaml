@@ -102,6 +102,9 @@ cronjobs: []
 #    # concurrencyPolicy: "Forbid"    # Allow, Forbid, Replace
 #    # successfulJobsHistoryLimit: 1
 #    # failedJobsHistoryLimit: 3
+#    # startingDeadlineSeconds: 300   # Deadline to start a missed run (else skipped)
+#    # activeDeadlineSeconds: 600     # Kill the job if it runs longer than this
+#    # backoffLimit: 1                # Retries before the job is marked failed
 #    # restartPolicy: "OnFailure"     # OnFailure, Never
 #    # suspend: false
 #    # volumes: ["data"]              # List of volume names from main volumes to mount

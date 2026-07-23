@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.9.0] - 2026-07-23
+
+### Added
+- CronJob: campi opzionali `startingDeadlineSeconds`, `activeDeadlineSeconds` e `backoffLimit` per ogni entry di `cronjobs[]`
+  - `startingDeadlineSeconds` sulla spec del CronJob; `activeDeadlineSeconds` e `backoffLimit` sullo spec del Job
+  - Senza timeout un job appeso, con `concurrencyPolicy: Forbid`, blocca per sempre le esecuzioni successive
+  - Tutti opzionali, default = comportamento invariato (nessun campo emesso se non valorizzato)
+  - `backoffLimit` valutato con `hasKey` (non truthiness) così `0` è un valore valido
+
+## [1.8.0] - 2026-07-10
+
+### Added
+- Supporto `extraVolumes[]` / `extraVolumeMounts[]`: passthrough di volumi e mount arbitrari nel deployment (es. token proiettati per Workload Identity Federation)
+
 ## [1.7.0] - 2026-04-14
 
 ### Added
