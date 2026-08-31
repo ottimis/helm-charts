@@ -11,6 +11,9 @@ metadata:
     app.kubernetes.io/component: cronjob-{{ $job.name }}
 spec:
   schedule: {{ $job.schedule | quote }}
+  {{- if $job.timeZone }}
+  timeZone: {{ $job.timeZone | quote }}
+  {{- end }}
   {{- if $job.startingDeadlineSeconds }}
   startingDeadlineSeconds: {{ $job.startingDeadlineSeconds }}
   {{- end }}

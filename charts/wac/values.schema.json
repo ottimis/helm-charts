@@ -203,6 +203,7 @@
         "properties": {
           "name": { "type": "string", "description": "CronJob name (appended to release name)" },
           "schedule": { "type": "string", "description": "Cron schedule expression" },
+          "timeZone": { "type": "string", "description": "IANA time zone name for the schedule (e.g. Europe/Rome). Requires Kubernetes >= 1.27. Omitted = kube-controller-manager local time (UTC on EKS)" },
           "command": { "type": "array", "items": { "type": "string" }, "description": "Container command" },
           "args": { "type": "array", "items": { "type": "string" }, "description": "Container args" },
           "image": { "type": "string", "description": "Override image (defaults to main image)" },

@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.0] - 2026-08-31
+
+### Added
+- CronJob: campo opzionale `timeZone` per ogni entry di `cronjobs[]`
+  - Finisce in `spec.timeZone` del CronJob (`batch/v1`), GA da Kubernetes 1.27: su cluster più vecchi il campo viene ignorato o rifiutato
+  - Senza il campo la schedule è valutata nel fuso locale del kube-controller-manager (UTC su EKS), quindi i confini di giorno/mese si spostano di un'ora due volte l'anno rispetto all'ora locale
+  - Opzionale, emesso solo se valorizzato: senza il campo il manifest resta identico a prima
+  - Evitare schedule nella finestra `02:00-03:00` locale nei fusi europei: a marzo quell'ora non esiste (esecuzione saltata), a ottobre è doppia (possibile esecuzione ripetuta)
+
 ## [1.9.0] - 2026-07-23
 
 ### Added

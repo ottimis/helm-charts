@@ -96,6 +96,7 @@ cronjobs: []
 #    command: ["php", "/var/www/html/scripts/cleanup.php"]
 #    # Optional:
 #    # args: []
+#    # timeZone: "Europe/Rome"   # IANA name; K8s >= 1.27
 #    # image: ""                      # Uses main image if empty
 #    # resources: {}                  # Uses deployment.resources if empty
 #    # env: {}                        # Additional env vars (merged with deployment.env)

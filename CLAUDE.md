@@ -14,7 +14,7 @@ charts/
 
 ## Chart: WAC (Web Application Component)
 
-**Versione:** 1.4.0
+**Versione:** 1.10.0
 **App Version:** 1.1.1
 **Maintainer:** MM <mm@ottimis.com>
 
@@ -190,6 +190,7 @@ cronjobs:
     command: ["php", "/var/www/html/scripts/cleanup.php"]
     # Opzionali:
     # args: []                           # Argomenti aggiuntivi
+    # timeZone: "Europe/Rome"            # Fuso IANA della schedule; richiede K8s >= 1.27
     # image: ""                          # Override immagine (default: image.repository)
     # resources: {}                      # Override risorse (default: deployment.resources)
     # env: {}                            # Env aggiuntive (merge con deployment.env)
@@ -206,6 +207,7 @@ cronjobs:
 - `env` del cronjob viene **aggiunto** (non sostituisce) alle env del deployment
 - Rispetta `preventRoot`, `imagePullSecrets`, `serviceAccountName`, `nodeAffinity`
 - I volumi sono selettivi: specifica solo i nomi dei volumi principali da montare
+- `timeZone` (opzionale) va in `spec.timeZone`: senza il campo la schedule è valutata in UTC su EKS. Evitare le 02:00-03:00 locali nei fusi europei (ora inesistente a marzo, doppia a ottobre)
 
 #### SFTP
 
