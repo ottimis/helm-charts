@@ -195,6 +195,37 @@
         "additionalProperties": false
       }
     },
+    "scheduler": {
+      "type": "object",
+      "description": "Per-release supercronic Deployment for cronjobs with runIn: scheduler",
+      "properties": {
+        "resources": { "type": ["object", "null"], "description": "Resource limits/requests of the scheduler pod" },
+        "terminationGracePeriodSeconds": { "type": "integer", "minimum": 0, "description": "Keep >= the longest scheduler job: on SIGTERM supercronic waits for running jobs" },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "port": { "type": "integer", "minimum": 1, "maximum": 65535 }
+          },
+          "additionalProperties": false
+        },
+        "timeZone": { "type": "string", "description": "IANA time zone for the schedules (CRON_TZ). Empty = container time zone (TZ)" },
+        "extraArgs": { "type": "array", "items": { "type": "string" }, "description": "Additional supercronic flags" }
+      },
+      "additionalProperties": false
+    },
+    "cronjobDefaults": {
+      "type": "object",
+      "description": "Defaults for cronjobs with runIn: job. Precedence: job value > cronjobDefaults > not emitted",
+      "properties": {
+        "resources": { "type": ["object", "null"] },
+        "ttlSecondsAfterFinished": { "type": ["integer", "null"], "minimum": 0 },
+        "activeDeadlineSeconds": { "type": ["integer", "null"], "minimum": 1 },
+        "backoffLimit": { "type": ["integer", "null"], "minimum": 0 },
+        "timeZone": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "cronjobs": {
       "type": "array",
       "description": "List of CronJob definitions",
@@ -203,18 +234,20 @@
         "properties": {
           "name": { "type": "string", "description": "CronJob name (appended to release name)" },
           "schedule": { "type": "string", "description": "Cron schedule expression" },
-          "timeZone": { "type": "string", "description": "IANA time zone name for the schedule (e.g. Europe/Rome). Requires Kubernetes >= 1.27. Omitted = kube-controller-manager local time (UTC on EKS)" },
+          "runIn": { "type": "string", "enum": ["job", "scheduler"], "description": "job (default): Kubernetes CronJob, one pod per run. scheduler: runs in the per-release supercronic Deployment" },
+          "timeZone": { "type": "string", "description": "IANA time zone name for the schedule (e.g. Europe/Rome). Requires Kubernetes >= 1.27. Default: cronjobDefaults.timeZone; empty = kube-controller-manager local time (UTC on EKS)" },
           "command": { "type": "array", "items": { "type": "string" }, "description": "Container command" },
           "args": { "type": "array", "items": { "type": "string" }, "description": "Container args" },
           "image": { "type": "string", "description": "Override image (defaults to main image)" },
-          "resources": { "type": "object", "description": "Resource limits/requests" },
+          "resources": { "type": ["object", "null"], "description": "Resource limits/requests (default: cronjobDefaults.resources; {} = none)" },
           "env": { "type": "object", "description": "Additional env vars", "additionalProperties": { "type": "string" } },
           "concurrencyPolicy": { "type": "string", "enum": ["Allow", "Forbid", "Replace"] },
           "successfulJobsHistoryLimit": { "type": "integer", "minimum": 0 },
           "failedJobsHistoryLimit": { "type": "integer", "minimum": 0 },
           "startingDeadlineSeconds": { "type": "integer", "minimum": 0, "description": "Deadline in seconds for starting the job if it misses its scheduled time" },
-          "activeDeadlineSeconds": { "type": "integer", "minimum": 1, "description": "Max duration in seconds the job may run before it is terminated" },
-          "backoffLimit": { "type": "integer", "minimum": 0, "description": "Number of retries before marking the job failed" },
+          "ttlSecondsAfterFinished": { "type": ["integer", "null"], "minimum": 0, "description": "Seconds after which a finished Job is deleted (default: cronjobDefaults.ttlSecondsAfterFinished; null = never)" },
+          "activeDeadlineSeconds": { "type": ["integer", "null"], "minimum": 1, "description": "Max duration in seconds the job may run before it is terminated (default: cronjobDefaults.activeDeadlineSeconds; null = no limit)" },
+          "backoffLimit": { "type": ["integer", "null"], "minimum": 0, "description": "Number of retries before marking the job failed (default: cronjobDefaults.backoffLimit; null = Kubernetes default 6)" },
           "restartPolicy": { "type": "string", "enum": ["OnFailure", "Never"] },
           "suspend": { "type": "boolean" },
           "volumes": { "type": "array", "items": { "type": "string" }, "description": "Volume names from main volumes to mount" }

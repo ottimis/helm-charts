@@ -1,0 +1,124 @@
+{{- /*
+Per-release scheduler: one Deployment running supercronic with the release
+image, for frequent short jobs (cronjobs[].runIn: scheduler). Rendered only
+if at least one job uses it.
+*/}}
+{{- include "wac.validateCronjobs" . }}
+{{- $volumeNames := list }}
+{{- $hasSchedulerJobs := false }}
+{{- range $job := .Values.cronjobs }}
+{{- if eq ($job.runIn | default "job") "scheduler" }}
+{{- $hasSchedulerJobs = true }}
+{{- $volumeNames = concat $volumeNames ($job.volumes | default list) }}
+{{- end }}
+{{- end }}
+{{- if $hasSchedulerJobs }}
+{{- $volumeNames = uniq $volumeNames }}
+{{- $name := include "wac.name" . }}
+{{- $crontab := include "wac.crontab" . }}
+{{- $sched := .Values.scheduler }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $name }}-crontab
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}-scheduler
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: scheduler
+    app.kubernetes.io/part-of: {{ $name }}
+data:
+  crontab: |
+    {{- $crontab | nindent 4 }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}-scheduler
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ $name }}-scheduler
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: scheduler
+    app.kubernetes.io/part-of: {{ $name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  # Never two schedulers at once, otherwise every job runs twice.
+  replicas: 1
+  strategy:
+    type: Recreate
+  # The `name` label differs from the web Deployment (`<name>-scheduler` vs
+  # `<name>`), so neither the web Deployment nor the Service select this pod.
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}-scheduler
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: scheduler
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $name }}-scheduler
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: scheduler
+        app.kubernetes.io/part-of: {{ $name }}
+      annotations:
+        # Restarts the pod when a scheduler job changes.
+        checksum/crontab: {{ $crontab | sha256sum }}
+        {{- if $sched.metrics.enabled }}
+        prometheus.io/scrape: "true"
+        prometheus.io/port: {{ $sched.metrics.port | quote }}
+        prometheus.io/path: "/metrics"
+        {{- end }}
+    spec:
+      securityContext:
+        {{- include "wac.podSecurityContext" . | nindent 8 }}
+      {{- with include "wac.podIdentity" . | trim }}{{ . | nindent 6 }}{{- end }}
+      # supercronic stops scheduling on SIGTERM and waits for running jobs.
+      terminationGracePeriodSeconds: {{ $sched.terminationGracePeriodSeconds }}
+      containers:
+        - name: scheduler
+          image: "{{ .Values.image.repository }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - supercronic
+            - -passthrough-logs
+            {{- if $sched.metrics.enabled }}
+            - -prometheus-listen-address
+            - {{ printf ":%v" $sched.metrics.port | quote }}
+            {{- end }}
+            {{- range $sched.extraArgs }}
+            - {{ . | quote }}
+            {{- end }}
+            - /etc/supercronic/crontab
+          resources:
+            {{- toYaml $sched.resources | nindent 12 }}
+          {{- if $sched.metrics.enabled }}
+          ports:
+            - containerPort: {{ $sched.metrics.port }}
+              name: metrics
+          {{- end }}
+          securityContext:
+            {{- include "wac.containerSecurityContext" . | nindent 12 }}
+          {{- with .Values.deployment.env }}
+          env:
+            {{- range $key, $value := . }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+          envFrom:
+            {{- with include "wac.envFrom" . | trim }}{{ . | nindent 12 }}{{- end }}
+          volumeMounts:
+            - name: crontab
+              mountPath: /etc/supercronic
+              readOnly: true
+            {{- with include "wac.selectedVolumeMounts" (dict "root" . "names" $volumeNames) | trim }}{{ . | nindent 12 }}{{- end }}
+      volumes:
+        - name: crontab
+          configMap:
+            name: {{ $name }}-crontab
+        {{- with include "wac.selectedVolumes" (dict "root" . "names" $volumeNames) | trim }}{{ . | nindent 8 }}{{- end }}
+      {{- with include "wac.jobScheduling" . | trim }}{{ . | nindent 6 }}{{- end }}
+{{- end }}

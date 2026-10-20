@@ -63,23 +63,8 @@ spec:
       {{- end }}
 
       securityContext:
-        {{- if .Values.preventRoot }}
-        fsGroup: {{ .Values.deployment.gid }}
-        runAsUser: {{ .Values.deployment.uid }}
-        runAsNonRoot: true
-        {{- else }}
-        runAsUser: 0
-        runAsNonRoot: false
-        {{- end }}
-      {{- if .Values.deployment.serviceAccountName }}
-      serviceAccountName: {{ .Values.deployment.serviceAccountName }}
-      {{- end }}
-      {{- if .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- range .Values.imagePullSecrets }}
-        - name: {{ . }}
-        {{- end }}
-      {{- end }}
+        {{- include "wac.podSecurityContext" . | nindent 8 }}
+      {{- with include "wac.podIdentity" . | trim }}{{ . | nindent 6 }}{{- end }}
       terminationGracePeriodSeconds: {{ add (default 0 .Values.deployment.gracefulShutdownSeconds) 10 }}
       containers:
         - name: {{ include "wac.name" . }}
@@ -106,15 +91,7 @@ spec:
               name: http
             {{- end }}
           securityContext:
-            {{- if .Values.preventRoot }}
-            runAsUser: {{ .Values.deployment.uid }}
-            runAsGroup: {{ .Values.deployment.gid }}
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            {{- else }}
-            runAsUser: 0
-            runAsNonRoot: false
-            {{- end }}
+            {{- include "wac.containerSecurityContext" . | nindent 12 }}
           {{- $gs := int (default 0 .Values.deployment.gracefulShutdownSeconds) }}
           {{- if gt $gs 0 }}
           lifecycle:
@@ -130,18 +107,7 @@ spec:
             {{- end }}
           {{- end }}
           envFrom:
-            {{- range .Values.deployment.existingConfigMapsEnv }}
-            - configMapRef:
-                name: {{ . }}
-            {{- end}}
-            {{- range .Values.deployment.existingSecretsEnv }}
-            - secretRef:
-                name: {{ . }}
-            {{- end}}
-            {{- range .Values.onePasswordSecrets }}
-            - secretRef:
-                name: {{ .name }}
-            {{- end}}
+            {{- with include "wac.envFrom" . | trim }}{{ . | nindent 12 }}{{- end }}
           volumeMounts:
             {{- if .Values.deployment.customIniCM }}
             - name: custom-ini

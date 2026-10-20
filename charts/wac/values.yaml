@@ -90,25 +90,78 @@ onePasswordSecrets: []
 #    #     path: /app/config.json
 #    #     subPath: config.json
 
+# Per-release scheduler for `cronjobs[]` with `runIn: scheduler`: one Deployment
+# (replicas 1, Recreate) running supercronic with the release image, instead of a
+# new pod per run. Rendered only if at least one job uses it.
+# Requires `supercronic` in the image PATH: the PHP base image ships it from
+# public.ecr.aws/ottimis/php:8.5.11-alpine (all variants). Node/Python images must
+# add it in their Dockerfile (see README.md).
+scheduler:
+  resources:
+    requests: { cpu: 20m, memory: 64Mi }
+    limits: { memory: 256Mi }
+  # On SIGTERM supercronic stops scheduling and waits for running jobs: keep this
+  # >= the duration of the longest scheduler job, or it gets SIGKILLed mid-run.
+  terminationGracePeriodSeconds: 300
+  # Prometheus metrics at :<port>/metrics (supercronic_* series), with the
+  # prometheus.io/* pod annotations.
+  metrics:
+    enabled: true
+    port: 9746
+  # Time zone used to evaluate the schedules (written as CRON_TZ in the crontab).
+  # Empty = container time zone (TZ / /etc/localtime: Europe/Rome in the PHP base
+  # image). Set "UTC" to keep the same times a CronJob without timeZone had.
+  timeZone: ""
+  # Additional supercronic flags, e.g. ["-json"], ["-split-logs"], ["-overlapping"]
+  extraArgs: []
+
+# Defaults for `cronjobs[]` with `runIn: job` (the default). Precedence:
+# job value > cronjobDefaults > field not emitted. A job opts out of a default
+# by setting the field to null (`resources: {}` for no resources).
+cronjobDefaults:
+  resources:
+    requests: { cpu: 50m, memory: 64Mi }
+    limits: { memory: 256Mi }
+  ttlSecondsAfterFinished: 3600   # Finished Jobs (and their pods) deleted after 1h
+  activeDeadlineSeconds: 3600     # Jobs running longer than 1h are killed
+  backoffLimit: 1                 # Retries before the Job is marked failed
+  timeZone: ""                    # Empty = UTC on EKS (kube-controller-manager time)
+
 cronjobs: []
+# runIn: job (default): a Kubernetes CronJob, one pod per run.
+# For long or heavy jobs, or jobs that need isolation.
 #  - name: "cleanup"
 #    schedule: "0 2 * * *"
 #    command: ["php", "/var/www/html/scripts/cleanup.php"]
 #    # Optional:
+#    # runIn: job                     # "job" (default) | "scheduler"
 #    # args: []
-#    # timeZone: "Europe/Rome"   # IANA name; K8s >= 1.27
+#    # timeZone: "Europe/Rome"        # IANA name; K8s >= 1.27 (default: cronjobDefaults.timeZone)
 #    # image: ""                      # Uses main image if empty
-#    # resources: {}                  # Uses deployment.resources if empty
+#    # resources: {}                  # Default: cronjobDefaults.resources
 #    # env: {}                        # Additional env vars (merged with deployment.env)
 #    # concurrencyPolicy: "Forbid"    # Allow, Forbid, Replace
 #    # successfulJobsHistoryLimit: 1
 #    # failedJobsHistoryLimit: 3
 #    # startingDeadlineSeconds: 300   # Deadline to start a missed run (else skipped)
-#    # activeDeadlineSeconds: 600     # Kill the job if it runs longer than this
-#    # backoffLimit: 1                # Retries before the job is marked failed
+#    # ttlSecondsAfterFinished: 3600  # Default: cronjobDefaults.ttlSecondsAfterFinished
+#    # activeDeadlineSeconds: 600     # Default: cronjobDefaults.activeDeadlineSeconds
+#    # backoffLimit: 1                # Default: cronjobDefaults.backoffLimit (0 is valid)
 #    # restartPolicy: "OnFailure"     # OnFailure, Never
 #    # suspend: false
 #    # volumes: ["data"]              # List of volume names from main volumes to mount
+#
+# runIn: scheduler: runs inside the release scheduler pod (see `scheduler`).
+# For frequent, short jobs (every 1-15 minutes). Allowed fields: name, schedule,
+# command (required), args, env, volumes. Job-level fields (restartPolicy,
+# concurrencyPolicy, activeDeadlineSeconds, backoffLimit, suspend, timeZone,
+# image, resources, ...) are rejected. A job never overlaps with its previous run.
+#  - name: "send-campaigns"
+#    schedule: "* * * * *"
+#    command: ["php", "/var/www/html/scripts/send-campaign.php"]
+#    runIn: scheduler
+#    # env: { BATCH_SIZE: "100" }     # Prepended to the command for this job only
+#    # volumes: ["data"]              # Mounted in the scheduler pod
 
 volumes: []
 #  - name: ""

@@ -14,7 +14,7 @@ charts/
 
 ## Chart: WAC (Web Application Component)
 
-**Versione:** 1.10.0
+**Versione:** 2.0.0
 **App Version:** 1.1.1
 **Maintainer:** MM <mm@ottimis.com>
 
@@ -61,10 +61,12 @@ Chart Helm generico per il deployment di applicazioni web (PHP, Node.js, NestJS,
 | Deployment | `templates/deployment.yaml` | Sempre |
 | Service | `templates/service.yaml` | Sempre |
 | Ingress | `templates/ingress.yaml` | `ingress.enabled: true` |
-| CronJob | `templates/cronjob.yaml` | Per ogni entry in `cronjobs[]` |
+| CronJob | `templates/cronjob.yaml` | Per ogni entry in `cronjobs[]` con `runIn: job` (default) |
+| ConfigMap `-crontab` + Deployment `-scheduler` | `templates/scheduler.yaml` | Almeno un entry in `cronjobs[]` con `runIn: scheduler` |
 | PersistentVolumeClaim | `templates/pvc.yaml` | Per ogni volume senza configMap/secret |
 | ConfigMap (SFTP) | `templates/sftp-configmap.yaml` | `sftp.enabled: true` |
 | Service (SFTP) | `templates/sftp-service.yaml` | `sftp.enabled: true` |
+| OnePasswordItem | `templates/onepassword.yaml` | Per ogni entry in `onePasswordSecrets[]` |
 
 ### Configurazione Principale
 
@@ -179,35 +181,61 @@ volumes:
     secret: "firebase-config"     # Nome Secret esistente
 ```
 
-#### CronJob
+#### Secret da 1Password
 
-Job schedulati che riutilizzano la stessa immagine e configurazione del deployment:
+Richiede il [1Password Kubernetes Operator](https://developer.1password.com/docs/k8s/operator/) nel cluster. Ogni entry genera una `OnePasswordItem`; l'operator sincronizza l'item in un Secret omonimo, montato in `envFrom` sia nel deployment che nei cronjob.
 
 ```yaml
-cronjobs:
-  - name: "cleanup"
-    schedule: "0 2 * * *"                # Cron expression
-    command: ["php", "/var/www/html/scripts/cleanup.php"]
-    # Opzionali:
-    # args: []                           # Argomenti aggiuntivi
-    # timeZone: "Europe/Rome"            # Fuso IANA della schedule; richiede K8s >= 1.27
-    # image: ""                          # Override immagine (default: image.repository)
-    # resources: {}                      # Override risorse (default: deployment.resources)
-    # env: {}                            # Env aggiuntive (merge con deployment.env)
-    # concurrencyPolicy: "Forbid"        # Allow, Forbid, Replace
-    # successfulJobsHistoryLimit: 1
-    # failedJobsHistoryLimit: 3
-    # restartPolicy: "OnFailure"         # OnFailure, Never
-    # suspend: false                     # Sospendi il cronjob
-    # volumes: ["data"]                  # Nomi dei volumi principali da montare
+onePasswordSecrets:
+  - name: "my-secret"       # Nome della OnePasswordItem e del Secret risultante
+    item: "item-name"       # Nome dell'item nella cassaforte
+    vault: "eks"            # Nome della cassaforte (default: eks)
+    autoRestart: true       # Restart del pod quando il secret cambia (default: true)
+    mountPaths:             # Opzionale: monta il Secret anche come file
+      - name: config
+        path: /app/config.json
+        subPath: config.json
 ```
 
-**Caratteristiche:**
-- Eredita automaticamente `env`, `existingConfigMapsEnv`, `existingSecretsEnv` dal deployment
-- `env` del cronjob viene **aggiunto** (non sostituisce) alle env del deployment
-- Rispetta `preventRoot`, `imagePullSecrets`, `serviceAccountName`, `nodeAffinity`
-- I volumi sono selettivi: specifica solo i nomi dei volumi principali da montare
-- `timeZone` (opzionale) va in `spec.timeZone`: senza il campo la schedule è valutata in UTC su EKS. Evitare le 02:00-03:00 locali nei fusi europei (ora inesistente a marzo, doppia a ottobre)
+**Invariante**: la *label* del campo nell'item diventa la chiave del Secret verbatim se rispetta `[-._a-zA-Z0-9]+`, quindi il nome della variabile d'ambiente. Un campo etichettato `DB_HOST` arriva al container come `DB_HOST`; label con spazi o accenti vengono riscritte dall'operator e non corrispondono piu' al nome atteso. I campi a valore vuoto sono scartati, salvo operator avviato con `--allow-empty-values`.
+
+Per popolare l'item senza creare i campi a mano uno a uno: `op item create --template`, con un JSON che ha un campo per variabile.
+
+#### CronJob e scheduler
+
+Ogni entry di `cronjobs[]` gira come `CronJob` (`runIn: job`, default: un pod per esecuzione, per job lunghi/pesanti) o dentro lo **scheduler per release** (`runIn: scheduler`: un Deployment `<release>-scheduler` con supercronic e la stessa immagine, per job brevi ogni 1-15 minuti). Guida completa (scelta della modalità, comportamento di supercronic, migrazione): [`charts/wac/README.md`](charts/wac/README.md).
+
+```yaml
+cronjobDefaults:                       # solo runIn: job; precedenza job > cronjobDefaults > non emesso
+  resources: { requests: { cpu: 50m, memory: 64Mi }, limits: { memory: 256Mi } }
+  ttlSecondsAfterFinished: 3600
+  activeDeadlineSeconds: 3600
+  backoffLimit: 1
+  timeZone: ""                         # vuoto = UTC
+scheduler:                             # solo runIn: scheduler
+  resources: { requests: { cpu: 20m, memory: 64Mi }, limits: { memory: 256Mi } }
+  terminationGracePeriodSeconds: 300   # >= job più lungo: su SIGTERM supercronic aspetta i job in corso
+  metrics: { enabled: true, port: 9746 }
+  timeZone: ""                         # CRON_TZ; vuoto = TZ del container
+  extraArgs: []
+cronjobs:
+  - name: "cleanup"
+    schedule: "0 2 * * *"
+    command: ["php", "/var/www/html/scripts/cleanup.php"]
+    # runIn: job | scheduler
+    # Comuni: args, env (aggiunte a deployment.env), volumes (nomi dei volumi principali)
+    # Solo job: timeZone, image, resources, concurrencyPolicy (Forbid), successful/failedJobsHistoryLimit,
+    #   startingDeadlineSeconds, ttlSecondsAfterFinished, activeDeadlineSeconds, backoffLimit, restartPolicy, suspend
+```
+
+**Invarianti:**
+- CronJob e scheduler ereditano `env`, `existingConfigMapsEnv`, `existingSecretsEnv`, `onePasswordSecrets`, `preventRoot`, `imagePullSecrets`, `serviceAccountName`, tolerations da `deployment.nodeAffinity` e `nodeSelector` dagli helper comuni di `_helpers.tpl`: le modifiche vanno fatte lì, non nei template.
+- `resources` dei CronJob **non** ripiega su `deployment.resources`. Un job disattiva un default con `null`; `backoffLimit: 0` è valido (`hasKey`).
+- Lo scheduler ha `replicas: 1` + `Recreate` (due scheduler = job eseguiti due volte).
+- I pod di scheduler e CronJob hanno `app.kubernetes.io/name: <release>-scheduler` / `<release>-cronjob`: **non devono** combaciare con il selettore del Deployment web e del Service (`name` + `instance`, immutabile), altrimenti ricevono traffico.
+- Con `runIn: scheduler` i campi solo-job fanno `fail`; `command` è obbligatorio. Ogni argomento nel crontab è quotato per `/bin/sh` (`wac.shellQuote`); `%` non va escapato (supercronic non lo tratta come Vixie cron).
+- Fuso orario: CronJob senza `timeZone` = UTC; supercronic = TZ del container (Europe/Rome nell'immagine base). Spostare un job a orario fisso nello scheduler lo sposta di 1-2 ore.
+- Prerequisito: `supercronic` nel PATH dell'immagine: l'immagine PHP base lo include da `public.ecr.aws/ottimis/php:8.5.11-alpine` (tutte le varianti); con tag precedenti il pod scheduler va in `CrashLoopBackOff`. Immagini Node/Python lo aggiungono nel loro Dockerfile (vedi README).
 
 #### SFTP
 
