@@ -542,10 +542,12 @@ L'immagine WordPress custom (`ottimis/wordpress`) ha `USER www-data` (UID 1000) 
 Il chart genera automaticamente tre Secret:
 
 1. **`{release}-admin-password`**: Password admin WordPress (generata random se non esiste)
-2. **`{release}-salt-keys`**: 8 chiavi di sicurezza WordPress (generate random se non specificate)
+2. **`{release}-salt-keys`**: 8 chiavi di sicurezza WordPress: `wordpress.saltKeys.*` > chiavi già nel Secret (`lookup`, v1.1.0+) > random solo alla prima installazione. Prima della 1.1.0 ogni upgrade le rigenerava (logout di tutti)
 3. **`{release}-sftp`**: Credenziali SFTP `users.conf` (solo se `sftp.enabled: true` e `sftp.existingSecret` vuoto)
 
 I primi due hanno `helm.sh/resource-policy: keep` per persistere tra gli upgrade.
+
+**Readiness** (v1.1.0+): `readinessProbe` attiva di default, `httpGet /wp-login.php` con `X-Forwarded-Proto: https` (salta il redirect http→https del vhost e arriva a PHP); l'entrypoint esegue wp-cli/init per ~1 min prima di Apache. Template robusti a `--reuse-values` da 0.5.x: ogni nuovo valore ha un default nel template (`ingress.groupName` → `frontend-public`).
 
 ---
 

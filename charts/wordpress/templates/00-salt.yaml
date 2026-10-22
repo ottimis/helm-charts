@@ -1,16 +1,35 @@
+{{- /*
+Salt keys priority: explicit value in .Values.wordpress.saltKeys > key already in the
+existing Secret (kept across upgrades) > random. Without the lookup every upgrade
+regenerated the keys and logged out every user.
+*/ -}}
+{{- $secretName := printf "%s-salt-keys" (include "wordpress.name" .) -}}
+{{- $existing := (lookup "v1" "Secret" .Release.Namespace $secretName).data | default dict -}}
+{{- $values := .Values.wordpress.saltKeys | default dict -}}
+{{- $keys := dict
+  "WORDPRESS_AUTH_KEY" "authKey"
+  "WORDPRESS_SECURE_AUTH_KEY" "secureAuthKey"
+  "WORDPRESS_LOGGED_IN_KEY" "loggedInKey"
+  "WORDPRESS_NONCE_KEY" "nonceKey"
+  "WORDPRESS_AUTH_SALT" "authSalt"
+  "WORDPRESS_SECURE_AUTH_SALT" "secureAuthSalt"
+  "WORDPRESS_LOGGED_IN_SALT" "loggedInSalt"
+  "WORDPRESS_NONCE_SALT" "nonceSalt" -}}
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "wordpress.name" . }}-salt-keys
+  name: {{ $secretName }}
   annotations:
     helm.sh/resource-policy: keep
 type: Opaque
 data:
-  WORDPRESS_AUTH_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.authKey | b64enc | quote }}
-  WORDPRESS_SECURE_AUTH_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.secureAuthKey | b64enc | quote }}
-  WORDPRESS_LOGGED_IN_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.loggedInKey | b64enc | quote }}
-  WORDPRESS_NONCE_KEY: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.nonceKey | b64enc | quote }}
-  WORDPRESS_AUTH_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.authSalt | b64enc | quote }}
-  WORDPRESS_SECURE_AUTH_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.secureAuthSalt | b64enc | quote }}
-  WORDPRESS_LOGGED_IN_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.loggedInSalt | b64enc | quote }}
-  WORDPRESS_NONCE_SALT: {{ default (randAlphaNum 64) .Values.wordpress.saltKeys.nonceSalt | b64enc | quote }}
+{{- range $envName, $valueKey := $keys }}
+  {{- $fromValues := index $values $valueKey | default "" }}
+  {{- if $fromValues }}
+  {{ $envName }}: {{ $fromValues | b64enc | quote }}
+  {{- else if hasKey $existing $envName }}
+  {{ $envName }}: {{ index $existing $envName | quote }}
+  {{- else }}
+  {{ $envName }}: {{ randAlphaNum 64 | b64enc | quote }}
+  {{- end }}
+{{- end }}

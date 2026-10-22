@@ -14,7 +14,17 @@ resources:
 image:
   repository: ottimis/wordpress
   pullPolicy: IfNotPresent
-  tag: "6.9.0"
+  tag: "7.1.3-php8.3-r2"
+
+# HTTP readiness on the WordPress container (port "http", header X-Forwarded-Proto: https).
+# The pod becomes ready (and enters the ALB target group) only when Apache+PHP answer.
+readinessProbe:
+  enabled: true
+  path: /wp-login.php
+  initialDelaySeconds: 10
+  periodSeconds: 15
+  timeoutSeconds: 10
+  failureThreshold: 4
 
 service:
   type: ClusterIP

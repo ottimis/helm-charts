@@ -86,6 +86,22 @@ spec:
           ports:
             - containerPort: {{ default 8080 .Values.deployment.port }}
               name: http
+          {{- $rp := .Values.readinessProbe | default dict }}
+          {{- if dig "enabled" true $rp }}
+          {{- /* Ready only once Apache+PHP answer: the entrypoint runs wp-cli/init scripts before starting Apache */}}
+          readinessProbe:
+            httpGet:
+              path: {{ dig "path" "/wp-login.php" $rp }}
+              port: http
+              httpHeaders:
+                {{- /* Skip the vhost http->https redirect so the request reaches PHP */}}
+                - name: X-Forwarded-Proto
+                  value: https
+            initialDelaySeconds: {{ dig "initialDelaySeconds" 10 $rp }}
+            periodSeconds: {{ dig "periodSeconds" 15 $rp }}
+            timeoutSeconds: {{ dig "timeoutSeconds" 10 $rp }}
+            failureThreshold: {{ dig "failureThreshold" 4 $rp }}
+          {{- end }}
           {{- if .Values.preventRoot }}
           securityContext:
             runAsUser: {{ .Values.deployment.uid }}
