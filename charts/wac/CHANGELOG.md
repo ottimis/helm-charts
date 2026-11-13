@@ -1,5 +1,10 @@
 # Changelog
 
+## [2.0.1] - 2026-11-13
+
+### Fixed
+- Voce 2.0.0, Migration Guide: la spiegazione dei vincoli `chartVersion` era imprecisa (la tilde blocca la minor: `~1.9.0` resta sulla 1.9.x, non segue l'ultima 1.x). Aggiunti esempi per caso e il consiglio di pinnare `~1.10.0` finché non si sono verificati i breaking change dei CronJob. Solo documentazione: template e values invariati rispetto alla 2.0.0.
+
 ## [2.0.0] - 2026-10-20
 
 ### Breaking Changes
@@ -37,7 +42,12 @@ cronjobs:
 ```
 Per tutta la release: gli stessi campi a `null` sotto `cronjobDefaults`.
 
-Nei progetti og-ci: aggiornare `chartVersion` in `.config/config.yml` (es. `~2.0.0`); un pin `~1.x.0` continua a usare l'ultima 1.x.
+Nei progetti og-ci, `chartVersion` in `.config/config.yml` è un vincolo semver: la tilde blocca la minor, il caret la major.
+- `~1.10.0` → ultima 1.10.x
+- `^1.0.0` → ultima 1.x, minor successive incluse
+- `~2.0.0` → ultima 2.0.x (per passare a questa versione)
+
+Un pin `~1.N.0` con N < 10 resta sull'ultima 1.N.x e non riceve la 1.10.0. **Chi non ha ancora verificato i breaking change dei CronJob descritti sopra deve pinnare `~1.10.0` prima del prossimo deploy.**
 
 ### Added
 - `cronjobs[].runIn`: `job` (default, CronJob Kubernetes) o `scheduler`

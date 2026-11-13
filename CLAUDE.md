@@ -14,7 +14,7 @@ charts/
 
 ## Chart: WAC (Web Application Component)
 
-**Versione:** 2.0.0
+**Versione:** 2.0.1
 **App Version:** 1.1.1
 **Maintainer:** MM <mm@ottimis.com>
 
@@ -621,5 +621,6 @@ Quando si apportano modifiche ai chart, seguire **sempre** queste regole:
    - **Major** (x.0.0): Breaking changes (modifiche incompatibili, rinominazione risorse, rimozione campi)
    - **Minor** (0.x.0): Nuove funzionalità retrocompatibili
    - **Patch** (0.0.x): Bug fix retrocompatibili
+   - Vale anche per le modifiche di sola documentazione dentro `charts/<chart>/` (CHANGELOG, README): `release.yml` pubblica su `charts.otm.ai` a ogni push su `main` e **fallisce** se un chart è cambiato ma la sua `version` è già pubblicata (le versioni pubblicate sono immutabili)
 
 4. **Aggiornare `values.schema.json`** se si aggiungono o modificano campi in `values.yaml`.

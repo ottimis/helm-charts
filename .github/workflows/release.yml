@@ -4,6 +4,16 @@ on:
   push:
     branches:
       - main
+    # Parte solo se cambia un chart o questo workflow: modifiche a README/CLAUDE.md
+    # della radice non ripubblicano nulla.
+    paths:
+      - 'charts/**'
+      - '.github/workflows/release.yml'
+
+# Due push ravvicinati non devono scrivere su gh-pages in parallelo.
+concurrency:
+  group: release-helm-charts
+  cancel-in-progress: false
 
 jobs:
   release:
@@ -12,6 +22,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # serve github.event.before per il diff per chart
 
       - name: Set up Helm
         uses: azure/setup-helm@v4
@@ -23,23 +35,79 @@ jobs:
           ref: gh-pages
           path: ./gh-pages
 
+      # Le versioni pubblicate sono immutabili:
+      # - versione non ancora su gh-pages -> package
+      # - versione già pubblicata e chart invariato nel push -> skip
+      # - versione già pubblicata ma chart modificato nel push -> errore (manca il bump)
       - name: Package Helm Charts
+        id: package
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
         run: |
+          set -euo pipefail
           mkdir -p packages
-          for chart in $(ls -d charts/*/); do
-            helm package $chart -d packages
+
+          # Push iniziale, force-push o commit "before" non raggiungibile:
+          # il diff non si calcola: si pubblicano solo le versioni nuove, senza
+          # bloccare (né sovrascrivere) quelle già presenti.
+          diff_ok=true
+          if [[ -z "$BEFORE" || "$BEFORE" =~ ^0+$ ]] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            diff_ok=false
+            echo "::notice::Diff non disponibile ($BEFORE): pubblico solo le versioni non ancora presenti"
+          fi
+
+          failed=0
+          for chart in charts/*/; do
+            chart="${chart%/}"
+            name=$(helm show chart "$chart" | awk '/^name:/ {print $2; exit}')
+            version=$(helm show chart "$chart" | awk '/^version:/ {print $2; exit}' | tr -d '"')
+            pkg="$name-$version.tgz"
+
+            if [[ ! -f "gh-pages/$pkg" ]]; then
+              echo "Pubblico $pkg"
+              helm package "$chart" -d packages
+              continue
+            fi
+
+            if [[ "$diff_ok" != true ]]; then
+              echo "::warning file=$chart/Chart.yaml::$pkg già pubblicato, diff non verificabile: non viene ripubblicato"
+              continue
+            fi
+
+            if git diff --quiet "$BEFORE" "$AFTER" -- "$chart"; then
+              echo "Skip $pkg: già pubblicato, chart invariato"
+              continue
+            fi
+
+            echo "::error file=$chart/Chart.yaml::$pkg è già pubblicato ma $chart è cambiato: aggiornare version in Chart.yaml (e CHANGELOG.md)"
+            failed=1
           done
-          mv packages/* ./gh-pages/
+
+          if [[ "$failed" -ne 0 ]]; then
+            exit 1
+          fi
+
+          if compgen -G "packages/*.tgz" > /dev/null; then
+            mv packages/*.tgz ./gh-pages/
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::Nessuna nuova versione da pubblicare"
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Add CNAME file
+        if: steps.package.outputs.published == 'true'
         run: echo "charts.otm.ai" > ./gh-pages/CNAME
 
       # Step per aggiornare l'indice esistente preservando le versioni precedenti
       - name: Update Helm repo index
+        if: steps.package.outputs.published == 'true'
         run: |
           helm repo index ./gh-pages --url https://charts.otm.ai --merge ./gh-pages/index.yaml
 
       - name: Deploy to GitHub Pages
+        if: steps.package.outputs.published == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
